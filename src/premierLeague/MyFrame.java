@@ -6,10 +6,10 @@ import javax.swing.JFrame;
 
 public class MyFrame extends JFrame {
 
-	MyFrame() {
+	MyFrame(int width, int height) {
 		// JFrame = a GUI window to add components to. It contains all components
 
-		this.setBounds(40, 40, 500, 500);  // This sets width and height of this
+		this.setBounds(40, 40, width, height);  // This sets width and height of this
 		this.setTitle("Premier League");
 
         // By default it is HIDE_ON_CLOSE,
