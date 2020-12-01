@@ -1,20 +1,18 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.PrimitiveIterator.OfDouble;
 
 public class PremierLeagueManager implements LeagueManager {
-	public SportClub[] footballClubArray;
+	public FootballClub[] footballClubArray;
 	
-	private int footballClubAllrayCount = 0;
+	private int footballClubArrayCount = 0;
 	private BufferedReader input;
 	
 	public PremierLeagueManager()  {
 		this.footballClubArray = new FootballClub[20];
 		this.input = new BufferedReader(new InputStreamReader(System.in));
-		this.showUserOptions();
 	}
 	
-	private void showUserOptions() {
+	public void showUserOptions() {
 		System.out.println("\n###### Please select options below:\n\n"
 				+ "PRESS 1 - Create and add football club into the Premier League\n"
 				+ "PRESS 2 - Remove football club from Premier League\n"
@@ -39,6 +37,7 @@ public class PremierLeagueManager implements LeagueManager {
 			}
 			case 3: {
 				System.out.printf("You selected %d\n", selectedOption);
+				this.displayfootballClubStatistics();
 				break;
 			}
 			case 4: {
@@ -51,7 +50,7 @@ public class PremierLeagueManager implements LeagueManager {
 				break;
 			}
 		} catch (Exception e) {
-			System.out.println("###### Please enter only Numbers");
+			System.out.println("###### ERROR ###### Please enter only Numbers");
 			//e.printStackTrace();
 			this.showUserOptions();
 		}
@@ -78,14 +77,14 @@ public class PremierLeagueManager implements LeagueManager {
 			// If it has not add new football club as first and increment it's size
 			// If it has already some objects. Use footballClubArrayObjects as array
 			// size and to add football club at the end of it.
-			if (footballClubAllrayCount == 0) {
+			if (footballClubArrayCount == 0) {
 				if (footballClubArray[0] == null) {
 					footballClubArray[0] = footballClub;
-					footballClubAllrayCount++;
+					footballClubArrayCount++;
 				}
 			} else {
-				footballClubArray[footballClubAllrayCount] = footballClub;
-				footballClubAllrayCount++;
+				footballClubArray[footballClubArrayCount] = footballClub;
+				footballClubArrayCount++;
 			}
 
 			System.out.printf("\n###### OUTPUT ###### Name: %s, location: %s created and added to the PL table\n\n", footballClub.name, footballClub.location);
@@ -96,14 +95,15 @@ public class PremierLeagueManager implements LeagueManager {
 		}
 	}
 	
+	// Delete football club from Premier League table
 	private void deleteFootballClub() {
 		int count = 0;
 		
 		// Before selecting, I need to show available football club in PL table
 		System.out.print("\n###### Please select number or PRESS - q to quit:\n");
-		for (SportClub fc : footballClubArray) {
-			if (fc != null) {
-				System.out.printf("PRESS %d - %s\n", count+1, fc.name);
+		for (FootballClub fClub : footballClubArray) {
+			if (fClub != null) {
+				System.out.printf("PRESS %d - %s\n", count+1, fClub.name);
 				count++;
 			} else if (count == 0) {
 				System.out.print("\n###### The Premier League table is empty now\n");
@@ -124,6 +124,7 @@ public class PremierLeagueManager implements LeagueManager {
 			} else {
 				System.out.printf("###### You removed %s\n", footballClubArray[selectedOption-1].name);
 				this.removeElement(footballClubArray, selectedOption-1);
+				this.displayPremierLeagueTable();
 				this.showUserOptions();
 			}
 		} catch (Exception e) {
@@ -132,8 +133,62 @@ public class PremierLeagueManager implements LeagueManager {
 		}
 	}
 	
-	private void displayfootballClubArraytatistic() {
+	private void displayfootballClubStatistics() {
+		int count = 0;
 		
+		// Before selecting, I need to show available football club in PL table
+		System.out.print("\n###### Please select number or PRESS - q to quit:\n");
+		for (FootballClub fClub : footballClubArray) {
+			if (fClub != null) {
+				System.out.printf("PRESS %d - %s\n", count+1, fClub.name);
+				count++;
+			} else if (count == 0) {
+				System.out.print("\n###### The Premier League table is empty now\n");
+				this.showUserOptions();
+				break;
+			}
+		}
+		
+		int selectedOption;
+		// Try to get user input
+		try {
+			System.out.print("Select: ");
+			selectedOption = Integer.parseInt(input.readLine());
+			
+			if (String.valueOf(selectedOption) == "q") {
+				System.out.print("\n###### You cancelled operation\n");
+				this.showUserOptions();
+			} else {
+				
+				System.out.printf("\n###### %s statistics:\n", footballClubArray[selectedOption-1].name);
+				for (FootballClub fClub : footballClubArray) {
+					if (fClub.name == footballClubArray[selectedOption-1].name) {
+						System.out.printf("Name: %s\n"
+								+ "Location: %s\n"
+								+ "Defeats: %d\n"
+								+ "Draws: %d\n"
+								+ "Played matches: %d\n"
+								+ "Received goals: %d\n"
+								+ "Scored goals: %d\n"
+								+ "Point: %d\n",
+								fClub.name, 
+								fClub.location, 
+								fClub.defeats, 
+								fClub.draws, 
+								fClub.playedMatches, 
+								fClub.receivedGoals, 
+								fClub.scoredGoals, 
+								fClub.points);
+						break;
+					}
+				}
+				
+				this.showUserOptions();
+			}
+		} catch (Exception e) {
+			System.out.println("### ERROR ### Please enter only Numbers");
+			this.showUserOptions();
+		}
 	}
 	
 	private void displayPremierLeagueTable() {
@@ -154,6 +209,6 @@ public class PremierLeagueManager implements LeagueManager {
 	
 	private void removeElement(Object[] arr, int removedIdx) {
 	    System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
-	    this.footballClubAllrayCount--;
+	    this.footballClubArrayCount--;
 	}
 }
