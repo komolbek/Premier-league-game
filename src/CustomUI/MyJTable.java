@@ -7,6 +7,10 @@ import javax.swing.JTable;
 
 public class MyJTable extends JFrame {
 	
+	/**
+	  
+	 */
+	private static final long serialVersionUID = 1L;
 	// Table property
 	JTable table;
 	

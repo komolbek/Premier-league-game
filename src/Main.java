@@ -5,6 +5,7 @@ public class Main {
 		PremierLeagueManager premierLeagueManager = new PremierLeagueManager();
 		premierLeagueManager.showUserOptions();
 		
+		// Custom created JTable object. Custom classes are efficient to be reused 
 		MyJTable myJTable = new MyJTable();
 	}
 }

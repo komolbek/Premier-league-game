@@ -1,14 +1,21 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class PremierLeagueManager implements LeagueManager {
-	public FootballClub[] footballClubArray;
-
+	private ArrayList<FootballClub> footballClubArray = new ArrayList<>();
 	private int footballClubArrayCount = 0;
 	private BufferedReader input;
+	private Boolean isFileCreated = false;
 
 	public PremierLeagueManager() {
-		this.footballClubArray = new FootballClub[20];
+		this.footballClubArray = new  ArrayList<FootballClub>();
 		this.input = new BufferedReader(new InputStreamReader(System.in));
 	}
 
@@ -17,7 +24,8 @@ public class PremierLeagueManager implements LeagueManager {
 				+ "PRESS 1 - Create and add football club into the Premier League\n"
 				+ "PRESS 2 - Remove football club from Premier League\n"
 				+ "PRESS 3 - Select football club and display its statistics\n"
-				+ "PRESS 4 - Display Premier League table\n" + "PRESS 5 - Add played match\n"
+				+ "PRESS 4 - Display Premier League table\n" 
+				+ "PRESS 5 - Add played match\n"
 				+ "PRESS 6 - START Grapical Interface\n");
 		int selectedOption;
 
@@ -53,6 +61,15 @@ public class PremierLeagueManager implements LeagueManager {
 			}
 			case 6: {
 				System.out.printf("You selected %d\n", selectedOption);
+				this.wrtieChangesToFile();
+//				this.footballClubArray = this.readDataFromFile();
+//				if (footballClubArray.size() > 0) {
+//					for (FootballClub fClub : footballClubArray) {
+//						System.out.println(fClub.name);
+//					}
+//				} else {
+//					System.out.print("FAIL while reading file");
+//				}
 				return;
 			}
 			default:
@@ -61,7 +78,7 @@ public class PremierLeagueManager implements LeagueManager {
 			}
 		} catch (Exception e) {
 			System.out.println("###### ERROR ###### Please enter only Numbers");
-			// e.printStackTrace();
+			 System.out.print(e.getLocalizedMessage());
 			this.showUserOptions();
 		}
 	}
@@ -83,19 +100,7 @@ public class PremierLeagueManager implements LeagueManager {
 
 			FootballClub footballClub = new FootballClub(name, location);
 
-			// check if the array has any added object.
-			// If it has not add new football club as first and increment it's size
-			// If it has already some objects. Use footballClubArrayObjects as array
-			// size and to add football club at the end of it.
-			if (footballClubArrayCount == 0) {
-				if (footballClubArray[0] == null) {
-					footballClubArray[0] = footballClub;
-					footballClubArrayCount++;
-				}
-			} else {
-				footballClubArray[footballClubArrayCount] = footballClub;
-				footballClubArrayCount++;
-			}
+			footballClubArray.add(footballClub);
 
 			System.out.printf("\n###### SUCCESS ###### Name: %s, location: %s created and added to the PL table",
 					footballClub.name, footballClub.location);
@@ -133,8 +138,8 @@ public class PremierLeagueManager implements LeagueManager {
 				System.out.print("\n###### You cancelled operation\n");
 				this.showUserOptions();
 			} else {
-				System.out.printf("###### You removed %s\n", footballClubArray[selectedOption - 1].name);
-				this.removeElement(footballClubArray, selectedOption - 1);
+				System.out.printf("###### You removed %s\n", footballClubArray.get(selectedOption - 1).name);
+				this.footballClubArray.remove(selectedOption - 1);
 				this.displayPremierLeagueTable();
 				this.showUserOptions();
 			}
@@ -170,9 +175,9 @@ public class PremierLeagueManager implements LeagueManager {
 				System.out.print("\n###### You cancelled operation\n");
 			} else {
 
-				System.out.printf("\n###### %s statistics:\n", footballClubArray[selectedOption - 1].name);
+				System.out.printf("\n###### %s statistics:\n", footballClubArray.get(selectedOption - 1).name);
 				for (FootballClub fClub : footballClubArray) {
-					if (fClub.name == footballClubArray[selectedOption - 1].name) {
+					if (fClub.name == footballClubArray.get(selectedOption - 1).name) {
 						System.out.printf(
 								"Name: %s\n" + "Location: %s\n" + "Defeats: %d\n" + "Draws: %d\n"
 										+ "Played matches: %d\n" + "Received goals: %d\n" + "Scored goals: %d\n"
@@ -192,12 +197,12 @@ public class PremierLeagueManager implements LeagueManager {
 	private void displayPremierLeagueTable() {
 		int count = 0;
 
-		if (footballClubArrayCount == 0) {
-			System.out.print("\n###### Premier League table is empty:\n");
+		if (footballClubArray.size() == 0) {
+			System.out.print("\n###### Premier League table is empty:");
 		} else {
 			System.out.print("\n###### Premier League table:\n");
 			for (FootballClub fClub : footballClubArray) {
-				if (this.footballClubArray[count] != null) {
+				if (this.footballClubArray.get(count) != null) {
 					System.out.printf(
 							"\n%d - " + "%s, " + "Wins: %d " + "Defeats: %d, " + "Draws: %d, " + "Played matches: %d, "
 									+ "Received goals: %d, " + "Scored goals: %d, " + "Points: %d",
@@ -246,7 +251,7 @@ public class PremierLeagueManager implements LeagueManager {
 			count = 0;
 			for (FootballClub fClub : footballClubArray) {
 				if (fClub != null) {
-					if (fClub.name == footballClubArray[firstSelectClub - 1].name) {
+					if (fClub.name == footballClubArray.get(firstSelectClub - 1).name) {
 						fClub.playedMatches++;
 
 						fClub.scoredGoals += firstClubScoredGoals;
@@ -262,7 +267,7 @@ public class PremierLeagueManager implements LeagueManager {
 							fClub.defeats += 1;
 						}
 						count++;
-					} else if (fClub.name == footballClubArray[secondSelectClub - 1].name) {
+					} else if (fClub.name == footballClubArray.get(secondSelectClub - 1).name) {
 						fClub.playedMatches++;
 
 						fClub.scoredGoals += secondClubScoredGoals;
@@ -283,8 +288,8 @@ public class PremierLeagueManager implements LeagueManager {
 					}
 				}
 			}
-			System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubArray[firstSelectClub - 1].name,
-					firstClubScoredGoals, secondClubScoredGoals, footballClubArray[secondSelectClub - 1].name);
+			System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubArray.get(firstSelectClub - 1).name,
+					firstClubScoredGoals, secondClubScoredGoals, footballClubArray.get(secondSelectClub - 1).name);
 			this.showUserOptions();
 		} catch (Exception e) {
 			System.out.println("### ERROR ### Please enter only Numbers");
@@ -292,11 +297,48 @@ public class PremierLeagueManager implements LeagueManager {
 			this.showUserOptions();
 		}
 	}
-
-	// - HELPERS
-
-	private void removeElement(Object[] arr, int removedIdx) {
-		System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
-		this.footballClubArrayCount--;
+	
+	private void wrtieChangesToFile() {
+		if (this.isFileCreated) {
+			readDataFromFile();
+		} else {
+			try {
+				  //Write FootballClubs array from file.
+				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("src/footballClubList.txt"));
+				for (FootballClub fClub : footballClubArray) {
+					if (fClub != null) {
+						os.writeObject(fClub);
+					}
+				}
+				this.isFileCreated = true;
+				os.close();
+			    return;
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return;
+	}
+	
+	public void readDataFromFile() {
+	    //Read FootballClubs array from file.
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream("src/footballClubList.txt"));
+		    ArrayList<FootballClub> readObject = (ArrayList<FootballClub>) is.readObject();
+			this.footballClubArray = readObject;
+		    System.out.printf("##### DONE ##### %s", this.footballClubArray.toString());
+		    is.close();
+//		    return this.footballClubArray;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	    
+//		return new ArrayList<FootballClub>();
 	}
 }

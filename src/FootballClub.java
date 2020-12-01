@@ -1,8 +1,6 @@
 import java.io.Serializable;
 
 public class FootballClub extends SportClub implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	int wins = 0;
 	int draws = 0;
 	int defeats = 0;
@@ -14,6 +12,20 @@ public class FootballClub extends SportClub implements Serializable {
 	public FootballClub(String name, String location) {
 		this.name     = name;
 		this.location = location;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer("Name: ").append(this.name)
+				.append("Location : ").append(this.location)
+				.append("Wins : ").append(this.wins)
+				.append("Draws: ").append(this.draws)
+				.append("Defeats: ").append(this.defeats)
+				.append("Scored goals: ").append(this.scoredGoals)
+				.append("Received goals").append(this.receivedGoals)
+				.append("Played matches: ").append(this.playedMatches)
+				.append("Points: ").append(this.points)
+				.toString();
 	}
 }
 
