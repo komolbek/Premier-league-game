@@ -1,5 +1,8 @@
+import java.io.Serializable;
 
-public class FootballClub extends SportClub {
+public class FootballClub extends SportClub implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	int wins = 0;
 	int draws = 0;
 	int defeats = 0;
@@ -9,7 +12,7 @@ public class FootballClub extends SportClub {
 	int points = 0;
 	
 	public FootballClub(String name, String location) {
-		this.name = name;
+		this.name     = name;
 		this.location = location;
 	}
 }
