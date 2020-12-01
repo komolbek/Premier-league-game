@@ -41,7 +41,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setWins(int wins) {
-		this.wins = wins;
+		this.wins += wins;
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setDraws(int draws) {
-		this.draws = draws;
+		this.draws += draws;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setDefeats(int defeats) {
-		this.defeats = defeats;
+		this.defeats += defeats;
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setScoredGoals(int scoredGoals) {
-		this.scoredGoals = scoredGoals;
+		this.scoredGoals += scoredGoals;
 	}
 	
 	/**
@@ -93,7 +93,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setReceivedGoals(int receivedGoals) {
-		this.receivedGoals = receivedGoals;
+		this.receivedGoals += receivedGoals;
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setPlayedMatches(int playedMatches) {
-		this.playedMatches = playedMatches;
+		this.playedMatches += playedMatches;
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 
 	public void setPoints(int points) {
-		this.points = points;
+		this.points += points;
 	}
 
 	@Override

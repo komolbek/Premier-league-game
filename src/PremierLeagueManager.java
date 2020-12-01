@@ -178,12 +178,7 @@ public class PremierLeagueManager implements LeagueManager {
 				System.out.printf("\n###### %s statistics:\n", footballClubArray.get(selectedOption - 1).name);
 				for (FootballClub fClub : footballClubArray) {
 					if (fClub.name == footballClubArray.get(selectedOption - 1).name) {
-						System.out.printf(
-								"Name: %s\n" + "Location: %s\n" + "Defeats: %d\n" + "Draws: %d\n"
-										+ "Played matches: %d\n" + "Received goals: %d\n" + "Scored goals: %d\n"
-										+ "Points: %d\n",
-								fClub.name, fClub.location, fClub.defeats, fClub.draws, fClub.playedMatches,
-								fClub.receivedGoals, fClub.scoredGoals, fClub.points);
+						System.out.printf(fClub.toString());
 						break;
 					}
 				}
@@ -203,11 +198,7 @@ public class PremierLeagueManager implements LeagueManager {
 			System.out.print("\n###### Premier League table:\n");
 			for (FootballClub fClub : footballClubArray) {
 				if (this.footballClubArray.get(count) != null) {
-					System.out.printf(
-							"\n%d - " + "%s, " + "Wins: %d " + "Defeats: %d, " + "Draws: %d, " + "Played matches: %d, "
-									+ "Received goals: %d, " + "Scored goals: %d, " + "Points: %d",
-							count + 1, fClub.name, fClub.wins, fClub.defeats, fClub.draws, fClub.playedMatches,
-							fClub.receivedGoals, fClub.scoredGoals, fClub.points);
+					System.out.printf(fClub.toString());
 				}
 				count++;
 			}
@@ -252,35 +243,35 @@ public class PremierLeagueManager implements LeagueManager {
 			for (FootballClub fClub : footballClubArray) {
 				if (fClub != null) {
 					if (fClub.name == footballClubArray.get(firstSelectClub - 1).name) {
-						fClub.playedMatches++;
+						fClub.setPlayedMatches(1);
 
-						fClub.scoredGoals += firstClubScoredGoals;
-						fClub.receivedGoals += secondClubScoredGoals;
+						fClub.setScoredGoals(firstClubScoredGoals);
+						fClub.setReceivedGoals(secondClubScoredGoals);
 
 						if (firstClubScoredGoals > secondClubScoredGoals) {
-							fClub.wins += 1;
-							fClub.points += 3;
+							fClub.setWins(1);
+							fClub.setPoints(3);
 						} else if (firstClubScoredGoals == secondClubScoredGoals) {
-							fClub.draws += 1;
-							fClub.points += 1;
+							fClub.setDraws(1);
+							fClub.setPoints(1);
 						} else {
-							fClub.defeats += 1;
+							fClub.setDefeats(1);
 						}
 						count++;
 					} else if (fClub.name == footballClubArray.get(secondSelectClub - 1).name) {
-						fClub.playedMatches++;
+						fClub.setPlayedMatches(1);
 
-						fClub.scoredGoals += secondClubScoredGoals;
-						fClub.receivedGoals += firstClubScoredGoals;
+						fClub.setScoredGoals(secondClubScoredGoals);
+						fClub.setReceivedGoals(firstClubScoredGoals);
 
 						if (firstClubScoredGoals < secondClubScoredGoals) {
-							fClub.wins += 1;
-							fClub.points += 3;
+							fClub.setWins(1);
+							fClub.setPoints(3);
 						} else if (firstClubScoredGoals == secondClubScoredGoals) {
-							fClub.draws += 1;
-							fClub.points += 1;
+							fClub.setDraws(1);
+							fClub.setPoints(1);
 						} else {
-							fClub.defeats += 1;
+							fClub.setDefeats(1);
 						}
 						count++;
 					} else if (count == 2) {
