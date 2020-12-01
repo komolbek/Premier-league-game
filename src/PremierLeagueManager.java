@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class PremierLeagueManager implements LeagueManager {
 	private ArrayList<FootballClub> footballClubArray = new ArrayList<>();
-	private int footballClubArrayCount = 0;
 	private BufferedReader input;
 	private Boolean isFileCreated = false;
 
@@ -62,6 +61,7 @@ public class PremierLeagueManager implements LeagueManager {
 			case 6: {
 				System.out.printf("You selected %d\n", selectedOption);
 				this.wrtieChangesToFile();
+				this.readDataFromFile();
 //				this.footballClubArray = this.readDataFromFile();
 //				if (footballClubArray.size() > 0) {
 //					for (FootballClub fClub : footballClubArray) {
@@ -220,7 +220,7 @@ public class PremierLeagueManager implements LeagueManager {
 
 		// Before selecting, I need to show available football club in PL table
 		System.out.print("\n###### Please select number:\n");
-		if (footballClubArrayCount < 2) {
+		if (footballClubArray.size() < 2) {
 			System.out.print("\n###### NOT ENOUGH football clubs\n");
 			this.showUserOptions();
 		} else {
@@ -307,7 +307,7 @@ public class PremierLeagueManager implements LeagueManager {
 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("src/footballClubList.txt"));
 				for (FootballClub fClub : footballClubArray) {
 					if (fClub != null) {
-						os.writeObject(fClub);
+						os.writeObject(fClub.toString());
 					}
 				}
 				this.isFileCreated = true;
