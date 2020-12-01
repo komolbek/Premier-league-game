@@ -3,11 +3,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class PremierLeagueManager implements LeagueManager {
-	SportClub[] footballClubs;
+	SportClub[] footballClubArray;
+	int footballClubArrayObjects = 0;
 	BufferedReader input;
 	
 	public PremierLeagueManager()  {
-		this.footballClubs = new FootballClub[20];
+		this.footballClubArray = new FootballClub[20];
 		this.input = new BufferedReader(new InputStreamReader(System.in));
 		this.showUserOptions();
 	}
@@ -66,18 +67,18 @@ public class PremierLeagueManager implements LeagueManager {
 			location = input.readLine();
 			
 			FootballClub footballClub = new FootballClub(name, location);
-			for (int i = 0; i < footballClubs.length; i++) {
-				switch (i) {
-				case 0: {
-					footballClubs[0] = footballClub;
-					break;
-				}
-				default:
-					footballClubs[i - 1] = footballClub;
-					break;
-				}
-			}
 			
+			
+			if (footballClubArrayObjects == 0) {
+				System.out.println("AAAAAAAAAAAAAAAAAAAA");
+				footballClubArray[0] = footballClub;
+				footballClubArrayObjects++;
+			} else {
+				System.out.println("AAAAAAAAAAAAAAAAAAAA");
+				footballClubArray[footballClubArrayObjects] = footballClub;
+				footballClubArrayObjects++;
+			}
+
 			System.out.printf("\nFootball club %s in %s is created and added to the Premier League\n\n", footballClub.name, footballClub.location);
 			
 			this.showUserOptions();
@@ -90,14 +91,14 @@ public class PremierLeagueManager implements LeagueManager {
 		
 	}
 	
-	private void displayFootballClubStatistic() {
+	private void displayfootballClubArraytatistic() {
 		
 	}
 	
 	private void displayPremierLeagueTable() {
-		for (int i = 0; i < this.footballClubs.length; i++) {
-			if (this.footballClubs[i] != null) {
-				System.out.println(this.footballClubs[i].name);
+		for (int i = 0; i < this.footballClubArray.length; i++) {
+			if (this.footballClubArray[i] != null) {
+				System.out.println(this.footballClubArray[i].name);
 			}	
 		}
 	}
