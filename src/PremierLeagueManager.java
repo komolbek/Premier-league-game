@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import javax.crypto.spec.IvParameterSpec;
+
 public class PremierLeagueManager implements LeagueManager {
 	public FootballClub[] footballClubArray;
 	
@@ -13,11 +15,12 @@ public class PremierLeagueManager implements LeagueManager {
 	}
 	
 	public void showUserOptions() {
-		System.out.println("\n###### Please select options below:\n\n"
+		System.out.println("\n\n###### Please select options below:\n\n"
 				+ "PRESS 1 - Create and add football club into the Premier League\n"
 				+ "PRESS 2 - Remove football club from Premier League\n"
 				+ "PRESS 3 - Select football club and display its statistics\n"
-				+ "PRESS 4 - Display Premier League table\n");
+				+ "PRESS 4 - Display Premier League table\n"
+				+ "PRESS 5 - Add played match\n");
 		int selectedOption;
 		
 		try {
@@ -43,6 +46,11 @@ public class PremierLeagueManager implements LeagueManager {
 			case 4: {
 				System.out.printf("You selected %d\n", selectedOption);
 				this.displayPremierLeagueTable();
+				break;
+			}
+			case 5: {
+				System.out.printf("You selected %d\n", selectedOption);
+				this.addPlayedGame();
 				break;
 			}
 			default:
@@ -87,7 +95,7 @@ public class PremierLeagueManager implements LeagueManager {
 				footballClubArrayCount++;
 			}
 
-			System.out.printf("\n###### OUTPUT ###### Name: %s, location: %s created and added to the PL table\n\n", footballClub.name, footballClub.location);
+			System.out.printf("\n###### SUCCESS ###### Name: %s, location: %s created and added to the PL table", footballClub.name, footballClub.location);
 			
 			this.showUserOptions();
 		} catch (Exception e) {
@@ -145,7 +153,7 @@ public class PremierLeagueManager implements LeagueManager {
 			} else if (count == 0) {
 				System.out.print("\n###### The Premier League table is empty now\n");
 				this.showUserOptions();
-				break;
+				return;
 			}
 		}
 		
@@ -157,7 +165,6 @@ public class PremierLeagueManager implements LeagueManager {
 			
 			if (String.valueOf(selectedOption) == "q") {
 				System.out.print("\n###### You cancelled operation\n");
-				this.showUserOptions();
 			} else {
 				
 				System.out.printf("\n###### %s statistics:\n", footballClubArray[selectedOption-1].name);
@@ -170,7 +177,7 @@ public class PremierLeagueManager implements LeagueManager {
 								+ "Played matches: %d\n"
 								+ "Received goals: %d\n"
 								+ "Scored goals: %d\n"
-								+ "Point: %d\n",
+								+ "Points: %d\n",
 								fClub.name, 
 								fClub.location, 
 								fClub.defeats, 
@@ -182,13 +189,11 @@ public class PremierLeagueManager implements LeagueManager {
 						break;
 					}
 				}
-				
-				this.showUserOptions();
 			}
 		} catch (Exception e) {
 			System.out.println("### ERROR ### Please enter only Numbers");
-			this.showUserOptions();
 		}
+		this.showUserOptions();
 	}
 	
 	private void displayPremierLeagueTable() {
@@ -200,18 +205,18 @@ public class PremierLeagueManager implements LeagueManager {
 			System.out.print("\n###### Premier League table:\n");
 			for (FootballClub fClub : footballClubArray) {
 				if (this.footballClubArray[count] != null) {
-					System.out.printf("\n%d"
-							+ "Name: %s, "
-							+ "Location: %s, "
+					System.out.printf("\n%d - "
+							+ "%s, "
+							+ "Wins: %d"
 							+ "Defeats: %d, "
 							+ "Draws: %d, "
 							+ "Played matches: %d, "
 							+ "Received goals: %d, "
 							+ "Scored goals: %d, "
-							+ "Point: %d",
+							+ "Points: %d",
 							count+1,
 							fClub.name, 
-							fClub.location, 
+							fClub.wins,
 							fClub.defeats, 
 							fClub.draws, 
 							fClub.playedMatches, 
@@ -226,7 +231,85 @@ public class PremierLeagueManager implements LeagueManager {
 	}
 	
 	private void addPlayedGame() {
+		int count = 0;
 		
+		// Before selecting, I need to show available football club in PL table
+		System.out.print("\n###### Please select number:\n");
+		if (footballClubArrayCount < 2) {
+			System.out.print("\n###### NOT ENOUGH football clubs\n");
+			this.showUserOptions();
+		} else {
+			for (FootballClub fClub : footballClubArray) {
+				if (fClub != null) {
+					System.out.printf("PRESS %d - %s\n", count+1, fClub.name);
+					count++;
+				}
+			}
+		}
+		
+		int firstSelectClub;
+		int firstClubScoredGoals;
+		int secondSelectClub;
+		int secondClubScoredGoals;
+		
+		try {
+			System.out.print("Select FIRST football club: ");
+			firstSelectClub = Integer.parseInt(input.readLine());
+			System.out.print("Add FIRST football club scored GOALS: ");
+			firstClubScoredGoals = Integer.parseInt(input.readLine());
+			
+			System.out.print("Select SECOND football club: ");
+			secondSelectClub = Integer.parseInt(input.readLine());
+			System.out.print("Add SECOND football club scored GOALS: ");
+			secondClubScoredGoals = Integer.parseInt(input.readLine());
+			
+			count = 0;
+			for (FootballClub fClub : footballClubArray) {
+				if (fClub != null) {
+					if (fClub.name == footballClubArray[firstSelectClub-1].name) {
+						fClub.playedMatches++;
+					
+						fClub.scoredGoals += firstClubScoredGoals;
+						fClub.receivedGoals += secondClubScoredGoals;
+						
+						if (firstClubScoredGoals > secondClubScoredGoals) {
+							fClub.wins += 1;
+							fClub.points += 3;
+						} else if (firstClubScoredGoals == secondClubScoredGoals) {
+							fClub.draws += 1;
+							fClub.points += 1;
+						} else {
+							fClub.defeats += 1;
+						}
+						count++;
+					} else if (fClub.name == footballClubArray[secondSelectClub-1].name) {
+						fClub.playedMatches++;
+						
+						fClub.scoredGoals += secondClubScoredGoals;
+						fClub.receivedGoals += firstClubScoredGoals;
+						
+						if (firstClubScoredGoals < secondClubScoredGoals) {
+							fClub.wins += 1;
+							fClub.points += 3;
+						} else if (firstClubScoredGoals == secondClubScoredGoals) {
+							fClub.draws += 1;
+							fClub.points += 1;
+						} else {
+							fClub.defeats += 1;
+						}
+						count++;
+					} else if (count == 2) {
+						break;
+					}
+				}
+			}
+			System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubArray[firstSelectClub-1].name, firstClubScoredGoals, secondClubScoredGoals, footballClubArray[secondSelectClub-1].name);
+			this.showUserOptions();
+		} catch (Exception e) {
+			System.out.println("### ERROR ### Please enter only Numbers");
+			System.out.println(e.getLocalizedMessage());
+			this.showUserOptions();
+		}
 	}
 	
 	// - HELPERS
