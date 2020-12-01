@@ -192,11 +192,35 @@ public class PremierLeagueManager implements LeagueManager {
 	}
 	
 	private void displayPremierLeagueTable() {
-		System.out.print("\n###### Premier League table:\n");
-		for (int i = 0; i < this.footballClubArray.length; i++) {
-			if (this.footballClubArray[i] != null) {
-				System.out.printf("%d - %s\n", i+1, this.footballClubArray[i].name);
-			}	
+		int count = 0;
+		
+		if (footballClubArrayCount == 0) {
+			System.out.print("\n###### Premier League table is empty:\n");
+		} else {
+			System.out.print("\n###### Premier League table:\n");
+			for (FootballClub fClub : footballClubArray) {
+				if (this.footballClubArray[count] != null) {
+					System.out.printf("\n%d"
+							+ "Name: %s, "
+							+ "Location: %s, "
+							+ "Defeats: %d, "
+							+ "Draws: %d, "
+							+ "Played matches: %d, "
+							+ "Received goals: %d, "
+							+ "Scored goals: %d, "
+							+ "Point: %d",
+							count+1,
+							fClub.name, 
+							fClub.location, 
+							fClub.defeats, 
+							fClub.draws, 
+							fClub.playedMatches, 
+							fClub.receivedGoals, 
+							fClub.scoredGoals, 
+							fClub.points);
+				}	
+				count++;
+			}
 		}
 		this.showUserOptions();
 	}
