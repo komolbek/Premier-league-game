@@ -15,21 +15,23 @@ public class FileManagerImplementation implements FileManager {
 	private String dataFilePath;
 	
 	public FileManagerImplementation() {
-		this.dataFilePath = "src/footballClubList.txt";
+		this.dataFilePath = "src/footballClub";
 	}
 	
 	@Override
 	public void writeDataToFile(ArrayList<FootballClub> array) {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(this.dataFilePath);
+			FileOutputStream fileOutputStream = new FileOutputStream(this.dataFilePath, true);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeInt(array.size());
 			for (FootballClub footballClub : array) {
 				if (footballClub != null) {
-					objectOutputStream.writeObject(footballClub);
+					System.out.println(footballClub.toString());
+					objectOutputStream.writeObject(footballClub);;
 				}
 			}
 			objectOutputStream.close();
+			fileOutputStream.close();
 		} catch (IOException e) {
 			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
 		}
@@ -40,12 +42,16 @@ public class FileManagerImplementation implements FileManager {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(this.dataFilePath);
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			int trainCount = objectInputStream.readInt();
-			for (int i = 0; i < trainCount; i++) {
-				array.add((FootballClub) objectInputStream.readObject());
-				System.out.println(array.get(i).toString());
+			int footballClubsCount = objectInputStream.readInt();
+			ArrayList<FootballClub> tempArrayList = new ArrayList<FootballClub>();
+			System.out.println();
+			for (int i = 0; i < footballClubsCount; i++) {
+				tempArrayList.add((FootballClub) objectInputStream.readObject());
+				System.out.println(tempArrayList.get(i).toString());
 			}
+			array = tempArrayList;
 			objectInputStream.close();
+			fileInputStream.close();
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
 		}
