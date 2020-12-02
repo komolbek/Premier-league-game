@@ -1,22 +1,57 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class PremierLeagueManager implements LeagueManager {
-	private ArrayList<FootballClub> footballClubArray = new ArrayList<>();
+public final class PremierLeagueManager implements LeagueManager {
+	
+	/** PRIVATE_PROPERTIES */
+	
+	/**
+	 * @footballClubs is a list of unique object of FootballClub class
+	 */
+	
+	private ArrayList<FootballClub> footballClubs;
+	
+	/**
+	 * @input is a user console input reader. 
+	 * It is used in PremierLeagueManager class's
+	 * several methods, that's why I moved it to
+	 * the properties level to reused it.
+	 */
+	
 	private BufferedReader input;
-	private Boolean isFileCreated = false;
+
+	/**
+	 * @fileManager 
+	 */
+	
+	private FileManager fileManager;
+	
+	private enum DisplayPremierLeagueTableType {
+		BY_NAME,
+		BY_STATISTICS
+	}
+	
+	/** CONSTRUCTOR */
 
 	public PremierLeagueManager() {
-		this.footballClubArray = new  ArrayList<FootballClub>();
-		this.input = new BufferedReader(new InputStreamReader(System.in));
+		this.footballClubs     = new  ArrayList<FootballClub>();
+		this.input 			   = new BufferedReader(new InputStreamReader(System.in));
+		this.fileManager	   = new FileManagerImplementation();
+		
+		try {
+			this.fileManager.readTrainsFromFile(this.footballClubs);
+		} catch (FileNotFoundException e) {
+			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
+		}
 	}
+	
+	/** PUBLIC_METHODS */
+	
+	/** 
+	 * @showUserOptions
+	 */
 
 	public void showUserOptions() {
 		System.out.println("\n\n###### Please select options below:\n\n"
@@ -50,7 +85,7 @@ public class PremierLeagueManager implements LeagueManager {
 			}
 			case 4: {
 				System.out.printf("You selected %d\n", selectedOption);
-				this.displayPremierLeagueTable();
+				this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS);
 				break;
 			}
 			case 5: {
@@ -60,276 +95,224 @@ public class PremierLeagueManager implements LeagueManager {
 			}
 			case 6: {
 				System.out.printf("You selected %d\n", selectedOption);
-				this.wrtieChangesToFile();
-				this.readDataFromFile();
-//				this.footballClubArray = this.readDataFromFile();
-//				if (footballClubArray.size() > 0) {
-//					for (FootballClub fClub : footballClubArray) {
-//						System.out.println(fClub.name);
-//					}
-//				} else {
-//					System.out.print("FAIL while reading file");
-//				}
-				return;
+				this.fileManager.writeDataToFile(this.footballClubs);
+				this.fileManager.readTrainsFromFile(this.footballClubs);
+				break;
 			}
 			default:
 				System.out.printf("You selected %d which is incorrect value\n", selectedOption);
 				break;
 			}
 		} catch (Exception e) {
-			System.out.println("###### ERROR ###### Please enter only Numbers");
-			 System.out.print(e.getLocalizedMessage());
+			System.out.printf("###### ERROR ###### PLEASE ENTER ONLY NUMBERS 1-6. %s\n", e.getLocalizedMessage());
 			this.showUserOptions();
 		}
 	}
-
-	// Create new football club object. Give it's name and location
-	// and add it to the footballClubArray.
+	
+	/** 
+	 * @createFootballClub
+	 */
+	
 	private void createFootballClub() {
 		String name;
 		String location;
 
 		try {
-			System.out.println("\n###### Please add Football club name.");
-			System.out.print("Name: ");
+			System.out.print("\n###### Please add Football club NAME: ");
 			name = input.readLine();
 
-			System.out.println("\n###### Please add Football club's location.");
-			System.out.print("Location: ");
+			System.out.print("###### Please add Football club's LOCATION: ");
 			location = input.readLine();
-
+			
 			FootballClub footballClub = new FootballClub(name, location);
-
-			footballClubArray.add(footballClub);
-
-			System.out.printf("\n###### SUCCESS ###### Name: %s, location: %s created and added to the PL table",
-					footballClub.name, footballClub.location);
-
-			this.showUserOptions();
+			this.footballClubs.add(footballClub);
+			
+			System.out.printf("\n###### SUCCESS ###### Name: %s is added to the table",
+					footballClub.name.toUpperCase());
 		} catch (Exception e) {
-			System.out.println("Please use only letters");
+			System.out.printf("Please use only letters. %s\n", e.getLocalizedMessage());
 		}
+		this.showUserOptions();
 	}
 
-	// Delete football club from Premier League table
+	/** 
+	 * @deleteFootballClub
+	 */
+	
 	private void deleteFootballClub() {
-		int count = 0;
+		System.out.print("\n###### Please select number from list below:\n");
+		
+		if (footballClubs.size() > 0) {
+			int selectedOption;
+			
+			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
+			
+			try {
+				System.out.print("Select: ");
+				selectedOption = Integer.parseInt(input.readLine());
 
-		// Before selecting, I need to show available football club in PL table
-		System.out.print("\n###### Please select number or PRESS - q to quit:\n");
-		for (FootballClub fClub : footballClubArray) {
-			if (fClub != null) {
-				System.out.printf("PRESS %d - %s\n", count + 1, fClub.name);
-				count++;
-			} else if (count == 0) {
-				System.out.print("\n###### The Premier League table is empty now\n");
-				this.showUserOptions();
-				break;
+				System.out.printf("\n###### You removed %s\n", footballClubs.get(selectedOption - 1).name.toUpperCase());
+				this.footballClubs.remove(selectedOption - 1);
+				this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS);
+			} catch (Exception e) {
+				System.out.printf("### ERROR ### Please enter only Numbers and no empty space. %s", e.getLocalizedMessage());
 			}
+		} else {
+			System.out.print("\n###### OOPS ###### The Premier League table is EMPTY now\n");
 		}
-
-		int selectedOption;
-		// Try to get user input
-		try {
-			System.out.print("Select: ");
-			selectedOption = Integer.parseInt(input.readLine());
-
-			if (String.valueOf(selectedOption) == "q") {
-				System.out.print("\n###### You cancelled operation\n");
-				this.showUserOptions();
-			} else {
-				System.out.printf("###### You removed %s\n", footballClubArray.get(selectedOption - 1).name);
-				this.footballClubArray.remove(selectedOption - 1);
-				this.displayPremierLeagueTable();
-				this.showUserOptions();
-			}
-		} catch (Exception e) {
-			System.out.println("### ERROR ### Please enter only Numbers");
-			this.showUserOptions();
-		}
+		this.showUserOptions();
 	}
+	
+	/** 
+	 * @displayfootballClubStatistics
+	 */
 
 	private void displayfootballClubStatistics() {
-		int count = 0;
+		if (footballClubs.size() > 0) {
+			System.out.print("\n###### Please select number from list below:\n");
+			int selectedOption;
+			
+			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
+			
+			try {
+				System.out.print("Select: ");
+				selectedOption = Integer.parseInt(input.readLine());
 
-		// Before selecting, I need to show available football club in PL table
-		System.out.print("\n###### Please select number or PRESS - q to quit:\n");
-		for (FootballClub fClub : footballClubArray) {
-			if (fClub != null) {
-				System.out.printf("PRESS %d - %s\n", count + 1, fClub.name);
-				count++;
-			} else if (count == 0) {
-				System.out.print("\n###### The Premier League table is empty now\n");
-				this.showUserOptions();
-				return;
-			}
-		}
-
-		int selectedOption;
-		// Try to get user input
-		try {
-			System.out.print("Select: ");
-			selectedOption = Integer.parseInt(input.readLine());
-
-			if (String.valueOf(selectedOption) == "q") {
-				System.out.print("\n###### You cancelled operation\n");
-			} else {
-
-				System.out.printf("\n###### %s statistics:\n", footballClubArray.get(selectedOption - 1).name);
-				for (FootballClub fClub : footballClubArray) {
-					if (fClub.name == footballClubArray.get(selectedOption - 1).name) {
+				System.out.printf("\n###### %s statistics:\n", footballClubs.get(selectedOption - 1).name.toUpperCase());
+				
+				for (FootballClub fClub : footballClubs) {
+					if (fClub.name == footballClubs.get(selectedOption - 1).name) {
 						System.out.printf(fClub.toString());
 						break;
 					}
 				}
+			} catch (Exception e) {
+				System.out.println("### ERROR ### Please enter only Numbers");
 			}
-		} catch (Exception e) {
-			System.out.println("### ERROR ### Please enter only Numbers");
-		}
-		this.showUserOptions();
-	}
-
-	private void displayPremierLeagueTable() {
-		int count = 0;
-
-		if (footballClubArray.size() == 0) {
-			System.out.print("\n###### Premier League table is empty:");
 		} else {
-			System.out.print("\n###### Premier League table:\n");
-			for (FootballClub fClub : footballClubArray) {
-				if (this.footballClubArray.get(count) != null) {
-					System.out.printf(fClub.toString());
-				}
-				count++;
-			}
+			System.out.print("\n###### The Premier League table is empty now\n");
 		}
 		this.showUserOptions();
 	}
+	
+	/** 
+	 * @displayPremierLeagueTable
+	 */
+
+	private void displayPremierLeagueTable(DisplayPremierLeagueTableType type) {
+		if (footballClubs.size() > 0) {
+			System.out.print("\n###### Premier League table:\n");
+			
+			switch (type) {
+			case BY_NAME: {
+				for (int i = 0; i < this.footballClubs.size(); i++) {
+					if (this.footballClubs.get(i) != null) {
+						System.out.printf("PRESS %d - %s\n", i + 1, this.footballClubs.get(i).name);
+					}
+				}
+				return;
+			}
+			case BY_STATISTICS: {
+				for (int i = 0; i < this.footballClubs.size(); i++) {
+					if (this.footballClubs.get(i) != null) {
+						System.out.printf("%s\n", this.footballClubs.get(i).toString());
+					}
+				}
+				break;
+			}
+			}
+		} else {
+			System.out.print("\n###### Premier League table is empty:");
+		}
+		this.showUserOptions();
+	}
+	
+	/** 
+	 * @addPlayedGame
+	 */
 
 	private void addPlayedGame() {
-		int count = 0;
+		if (footballClubs.size() > 0) {
+			System.out.print("\n###### Please select number:\n");
+			
+			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
+			
+			int firstSelectClub;
+			int firstClubScoredGoals;
+			int secondSelectClub;
+			int secondClubScoredGoals;
+			int count = 0;
 
-		// Before selecting, I need to show available football club in PL table
-		System.out.print("\n###### Please select number:\n");
-		if (footballClubArray.size() < 2) {
-			System.out.print("\n###### NOT ENOUGH football clubs\n");
-			this.showUserOptions();
-		} else {
-			for (FootballClub fClub : footballClubArray) {
-				if (fClub != null) {
-					System.out.printf("PRESS %d - %s\n", count + 1, fClub.name);
-					count++;
-				}
-			}
-		}
+			try {
+				System.out.print("\nSelect FIRST football club: ");
+				firstSelectClub = Integer.parseInt(input.readLine());
+				System.out.print("Add FIRST football club scored GOALS: ");
+				firstClubScoredGoals = Integer.parseInt(input.readLine());
 
-		int firstSelectClub;
-		int firstClubScoredGoals;
-		int secondSelectClub;
-		int secondClubScoredGoals;
+				System.out.print("Select SECOND football club: ");
+				secondSelectClub = Integer.parseInt(input.readLine());
+				System.out.print("Add SECOND football club scored GOALS: ");
+				secondClubScoredGoals = Integer.parseInt(input.readLine());
 
-		try {
-			System.out.print("Select FIRST football club: ");
-			firstSelectClub = Integer.parseInt(input.readLine());
-			System.out.print("Add FIRST football club scored GOALS: ");
-			firstClubScoredGoals = Integer.parseInt(input.readLine());
-
-			System.out.print("Select SECOND football club: ");
-			secondSelectClub = Integer.parseInt(input.readLine());
-			System.out.print("Add SECOND football club scored GOALS: ");
-			secondClubScoredGoals = Integer.parseInt(input.readLine());
-
-			count = 0;
-			for (FootballClub fClub : footballClubArray) {
-				if (fClub != null) {
-					if (fClub.name == footballClubArray.get(firstSelectClub - 1).name) {
+				for (FootballClub fClub : footballClubs) {
+					if (fClub != null) {
 						fClub.setPlayedMatches(1);
+						
+						if (fClub.name == footballClubs.get(firstSelectClub - 1).name) {
+							fClub.setScoredGoals(firstClubScoredGoals);
+							fClub.setReceivedGoals(secondClubScoredGoals);
 
-						fClub.setScoredGoals(firstClubScoredGoals);
-						fClub.setReceivedGoals(secondClubScoredGoals);
+							if (firstClubScoredGoals > secondClubScoredGoals) {
+								fClub.setWins(1);
+								fClub.setPoints(3);
+							} else if (firstClubScoredGoals == secondClubScoredGoals) {
+								fClub.setDraws(1);
+								fClub.setPoints(1);
+							} else {
+								fClub.setDefeats(1);
+							}
+							count++;
+						} else if (fClub.name == footballClubs.get(secondSelectClub - 1).name) {
+							fClub.setScoredGoals(secondClubScoredGoals);
+							fClub.setReceivedGoals(firstClubScoredGoals);
 
-						if (firstClubScoredGoals > secondClubScoredGoals) {
-							fClub.setWins(1);
-							fClub.setPoints(3);
-						} else if (firstClubScoredGoals == secondClubScoredGoals) {
-							fClub.setDraws(1);
-							fClub.setPoints(1);
-						} else {
-							fClub.setDefeats(1);
+							if (firstClubScoredGoals < secondClubScoredGoals) {
+								fClub.setWins(1);
+								fClub.setPoints(3);
+							} else if (firstClubScoredGoals == secondClubScoredGoals) {
+								fClub.setDraws(1);
+								fClub.setPoints(1);
+							} else {
+								fClub.setDefeats(1);
+							}
+							count++;
 						}
-						count++;
-					} else if (fClub.name == footballClubArray.get(secondSelectClub - 1).name) {
-						fClub.setPlayedMatches(1);
-
-						fClub.setScoredGoals(secondClubScoredGoals);
-						fClub.setReceivedGoals(firstClubScoredGoals);
-
-						if (firstClubScoredGoals < secondClubScoredGoals) {
-							fClub.setWins(1);
-							fClub.setPoints(3);
-						} else if (firstClubScoredGoals == secondClubScoredGoals) {
-							fClub.setDraws(1);
-							fClub.setPoints(1);
-						} else {
-							fClub.setDefeats(1);
-						}
-						count++;
 					} else if (count == 2) {
 						break;
 					}
 				}
+				
+				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstSelectClub - 1).name,
+						firstClubScoredGoals, secondClubScoredGoals, footballClubs.get(secondSelectClub - 1).name);
+			} catch (Exception e) {
+				System.out.printf("### ERROR ### Please enter only Numbers. %s\n", e.getLocalizedMessage());
 			}
-			System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubArray.get(firstSelectClub - 1).name,
-					firstClubScoredGoals, secondClubScoredGoals, footballClubArray.get(secondSelectClub - 1).name);
-			this.showUserOptions();
-		} catch (Exception e) {
-			System.out.println("### ERROR ### Please enter only Numbers");
-			System.out.println(e.getLocalizedMessage());
-			this.showUserOptions();
-		}
-	}
-	
-	private void wrtieChangesToFile() {
-		if (this.isFileCreated) {
-			readDataFromFile();
 		} else {
-			try {
-				  //Write FootballClubs array from file.
-				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("src/footballClubList.txt"));
-				for (FootballClub fClub : footballClubArray) {
-					if (fClub != null) {
-						os.writeObject(fClub.toString());
-					}
-				}
-				this.isFileCreated = true;
-				os.close();
-			    return;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.print("\n###### Premier League table is empty:");
 		}
-		return;
+		this.showUserOptions();
 	}
 	
-	public void readDataFromFile() {
-	    //Read FootballClubs array from file.
-		try {
-			ObjectInputStream is = new ObjectInputStream(new FileInputStream("src/footballClubList.txt"));
-		    ArrayList<FootballClub> readObject = (ArrayList<FootballClub>) is.readObject();
-			this.footballClubArray = readObject;
-		    System.out.printf("##### DONE ##### %s", this.footballClubArray.toString());
-		    is.close();
-//		    return this.footballClubArray;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	    
-//		return new ArrayList<FootballClub>();
+	/** PUBLIC_METHODS*/
+	
+	/**
+	 * To see how many Football clubs the Premier League
+	 * manager manages we can use this @getfootballClubs
+	 * @getter method that returns a list of objects of 
+	 * FootballClub class 
+	 */
+	
+	public ArrayList<FootballClub> getfootballClubs() {
+		return footballClubs;
 	}
 }
