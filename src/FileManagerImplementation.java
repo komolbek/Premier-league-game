@@ -6,10 +6,21 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class FileManagerImplementation implements FileManager {
+	
+	/**
+	 * @dataFilePath 
+	 */
+	
+	private String dataFilePath;
+	
+	public FileManagerImplementation() {
+		this.dataFilePath = "src/footballClubList.txt";
+	}
+	
 	@Override
-	public void writeDataToFile(ArrayList<FootballClub> array, String file) {
+	public void writeDataToFile(ArrayList<FootballClub> array) {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			FileOutputStream fileOutputStream = new FileOutputStream(this.dataFilePath);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeInt(array.size());
 			for (FootballClub footballClub : array) {
@@ -24,9 +35,9 @@ public class FileManagerImplementation implements FileManager {
 	}
 
 	@Override
-	public void readTrainsFromFile(ArrayList<FootballClub> array, String file) {
+	public void readTrainsFromFile(ArrayList<FootballClub> array) {
 		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
+			FileInputStream fileInputStream = new FileInputStream(this.dataFilePath);
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 			int trainCount = objectInputStream.readInt();
 			for (int i = 0; i < trainCount; i++) {
