@@ -1,7 +1,7 @@
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public interface FileManager {
 	public void writeDataToFile(ArrayList<FootballClub> array);
-	public void readTrainsFromFile(ArrayList<FootballClub> array) throws FileNotFoundException;
+	public boolean isDataAvailable();
+	public ArrayList<FootballClub> readDataFromFile();
 }

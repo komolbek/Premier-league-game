@@ -1,5 +1,5 @@
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,7 +38,7 @@ public class FileManagerImplementation implements FileManager {
 	}
 
 	@Override
-	public void readTrainsFromFile(ArrayList<FootballClub> array) throws FileNotFoundException {
+	public ArrayList<FootballClub> readDataFromFile() {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(this.dataFilePath);
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -49,11 +49,22 @@ public class FileManagerImplementation implements FileManager {
 				tempArrayList.add((FootballClub) objectInputStream.readObject());
 				System.out.println(tempArrayList.get(i).toString());
 			}
-			array = tempArrayList;
 			objectInputStream.close();
 			fileInputStream.close();
+			return tempArrayList;
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
+		}
+		return new ArrayList<FootballClub>();
+	}
+	
+	@Override
+	public boolean isDataAvailable() {
+		File file = new File(this.dataFilePath);
+		if (file.exists() || file.length() > 0) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
