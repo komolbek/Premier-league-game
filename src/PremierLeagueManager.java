@@ -6,26 +6,20 @@ import java.util.ArrayList;
 public final class PremierLeagueManager implements LeagueManager {
 	
 	/** PRIVATE_PROPERTIES */
-	
 	/**
 	 * @footballClubs is a list of unique object of FootballClub class
 	 */
-	
 	private ArrayList<FootballClub> footballClubs;
-	
 	/**
 	 * @input is a user console input reader. 
 	 * It is used in PremierLeagueManager class's
 	 * several methods, that's why I moved it to
 	 * the properties level to reused it.
 	 */
-	
 	private BufferedReader input;
-
 	/**
 	 * @fileManager 
 	 */
-	
 	private FileManager fileManager;
 	
 	private enum DisplayPremierLeagueTableType {
@@ -46,13 +40,10 @@ public final class PremierLeagueManager implements LeagueManager {
 			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
 		}
 	}
-	
 	/** PUBLIC_METHODS */
-	
 	/** 
 	 * @showUserOptions
 	 */
-
 	public void showUserOptions() {
 		System.out.println("\n\n###### Please select options below:\n\n"
 				+ "PRESS 1 - Create and add football club into the Premier League\n"
@@ -89,11 +80,9 @@ public final class PremierLeagueManager implements LeagueManager {
 			this.showUserOptions();
 		}
 	}
-	
 	/** 
 	 * @createFootballClub
 	 */
-	
 	private void createFootballClub() {
 		String name;
 		String location;
@@ -115,11 +104,9 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 		this.showUserOptions();
 	}
-
 	/** 
 	 * @deleteFootballClub
 	 */
-	
 	private void deleteFootballClub() {
 		System.out.print("\n###### Please select number from list below:\n");
 		
@@ -143,11 +130,9 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 		this.showUserOptions();
 	}
-	
 	/** 
 	 * @displayfootballClubStatistics
 	 */
-
 	private void displayfootballClubStatistics() {
 		if (footballClubs.size() > 0) {
 			System.out.print("\n###### Please select number from list below:\n");
@@ -175,11 +160,9 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 		this.showUserOptions();
 	}
-	
 	/** 
 	 * @displayPremierLeagueTable
 	 */
-
 	private void displayPremierLeagueTable(DisplayPremierLeagueTableType type) {
 		if (footballClubs.size() > 0) {
 			System.out.print("\n###### Premier League table:\n");
@@ -207,11 +190,9 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 		this.showUserOptions();
 	}
-	
 	/** 
 	 * @addPlayedGame
 	 */
-
 	private void addPlayedGame() {
 		if (footballClubs.size() > 0) {
 			System.out.print("\n###### Please select number:\n");
@@ -279,17 +260,15 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 		this.showUserOptions();
 	}
-	
 	/** PUBLIC_METHODS*/
-	
 	/**
 	 * To see how many Football clubs the Premier League
 	 * manager manages we can use this @getfootballClubs
 	 * @getter method that returns a list of objects of 
 	 * FootballClub class 
 	 */
-	
+	@Override
 	public ArrayList<FootballClub> getfootballClubs() {
-		return footballClubs;
+		return this.footballClubs;
 	}
 }
