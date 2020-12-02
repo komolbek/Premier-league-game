@@ -3,7 +3,6 @@ import java.io.Serializable;
 public class FootballClub extends SportClub implements Serializable {
 	
 	//Private properties
-	private int id;
 	private int wins;
 	private int draws;
 	private int defeats;
@@ -16,19 +15,6 @@ public class FootballClub extends SportClub implements Serializable {
 	public FootballClub(String name, String location) {
 		this.name     = name;
 		this.location = location;
-	}
-	
-	/**
-	 * 
-	 * ID getter and Setter
-	 */
-	
-	public int getId() {
-		return id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
 	}
 	
 	/**
@@ -124,9 +110,15 @@ public class FootballClub extends SportClub implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FootballClub [name=" + name + ", location=" + location + ", id=" + id + ", wins=" + wins + ", draws="
-				+ draws + ", defeats=" + defeats + ", scoredGoals=" + scoredGoals + ", receivedGoals=" + receivedGoals
-				+ ", playedMatches=" + playedMatches + ", points=" + points + "]";
+		return "FootballClub [name = " + name 
+				+ ", location = " + location 
+				+ ", wins = " + wins 
+				+ ", draws = " + draws 
+				+ ", defeats = " + defeats 
+				+ ", scoredGoals = " + scoredGoals 
+				+ ", receivedGoals = " + receivedGoals
+				+ ", playedMatches = " + playedMatches 
+				+ ", points = " + points + "]";
 	}
 
 	
