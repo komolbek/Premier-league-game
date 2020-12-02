@@ -36,9 +36,9 @@ public final class PremierLeagueManager implements LeagueManager {
 	/** CONSTRUCTOR */
 
 	public PremierLeagueManager() {
-		this.footballClubs     = new  ArrayList<FootballClub>();
-		this.input 			   = new BufferedReader(new InputStreamReader(System.in));
-		this.fileManager	   = new FileManagerImplementation();
+		this.footballClubs = new  ArrayList<FootballClub>();
+		this.input = new BufferedReader(new InputStreamReader(System.in));
+		this.fileManager = new FileManagerImplementation();
 		
 		try {
 			this.fileManager.readTrainsFromFile(this.footballClubs);
@@ -66,41 +66,22 @@ public final class PremierLeagueManager implements LeagueManager {
 		try {
 			System.out.print("Select: ");
 			selectedOption = Integer.parseInt(input.readLine());
-
+			System.out.printf("You selected %d\n", selectedOption);
+			
 			switch (selectedOption) {
-			case 1: {
-				System.out.printf("You selected %d\n", selectedOption);
-				this.createFootballClub();
-				break;
-			}
-			case 2: {
-				System.out.printf("You selected %d\n", selectedOption);
-				this.deleteFootballClub();
-				break;
-			}
-			case 3: {
-				System.out.printf("You selected %d\n", selectedOption);
-				this.displayfootballClubStatistics();
-				break;
-			}
-			case 4: {
-				System.out.printf("You selected %d\n", selectedOption);
-				this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS);
-				break;
-			}
-			case 5: {
-				System.out.printf("You selected %d\n", selectedOption);
-				this.addPlayedGame();
-				break;
-			}
+			case 1: { this.createFootballClub(); break; }
+			case 2: { this.deleteFootballClub(); break; }
+			case 3: { this.displayfootballClubStatistics(); break; }
+			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
+			case 5: { this.addPlayedGame(); break; }
 			case 6: {
-				System.out.printf("You selected %d\n", selectedOption);
 				this.fileManager.writeDataToFile(this.footballClubs);
 				this.fileManager.readTrainsFromFile(this.footballClubs);
 				break;
 			}
 			default:
-				System.out.printf("You selected %d which is incorrect value\n", selectedOption);
+				System.out.printf("You selected %d which out of range value\n", selectedOption);
+				this.showUserOptions();
 				break;
 			}
 		} catch (Exception e) {
@@ -237,11 +218,7 @@ public final class PremierLeagueManager implements LeagueManager {
 			
 			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
 			
-			int firstSelectClub;
-			int firstClubScoredGoals;
-			int secondSelectClub;
-			int secondClubScoredGoals;
-			int count = 0;
+			int firstSelectClub, firstClubScoredGoals, secondSelectClub, secondClubScoredGoals, count = 0;
 
 			try {
 				System.out.print("\nSelect FIRST football club: ");
@@ -256,9 +233,8 @@ public final class PremierLeagueManager implements LeagueManager {
 
 				for (FootballClub fClub : footballClubs) {
 					if (fClub != null) {
-						fClub.setPlayedMatches(1);
-						
 						if (fClub.name == footballClubs.get(firstSelectClub - 1).name) {
+							fClub.setPlayedMatches(1);
 							fClub.setScoredGoals(firstClubScoredGoals);
 							fClub.setReceivedGoals(secondClubScoredGoals);
 
@@ -273,6 +249,7 @@ public final class PremierLeagueManager implements LeagueManager {
 							}
 							count++;
 						} else if (fClub.name == footballClubs.get(secondSelectClub - 1).name) {
+							fClub.setPlayedMatches(1);
 							fClub.setScoredGoals(secondClubScoredGoals);
 							fClub.setReceivedGoals(firstClubScoredGoals);
 
