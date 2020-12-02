@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JFrame; 
 import javax.swing.JScrollPane; 
@@ -8,16 +9,27 @@ import javax.swing.table.DefaultTableModel;
  	Custom, Reusable MyJTable class
  */
 public class MyTableView extends JFrame {
-	
 	private static final long serialVersionUID = 1L;
 	
-	// Table property
 	JTable table;
 	
 	 // Constructor 
 	public MyTableView(ArrayList<FootballClub> footballClubs) {
 		this.setTitle("Premier League");
-		
+		this.setLayout(null);
+		this.getContentPane().setBackground(new Color(113,247,159));
+        this.setSize(1200, 600); 
+        this.setVisible(true); 
+        
+        this.setupTable(footballClubs);
+        
+        // adding JTable table to JScrollPane 
+        JScrollPane scrollPanel = new JScrollPane(table); 
+        scrollPanel.setBounds(0, 0, 1200, 400); 
+        this.add(scrollPanel);
+	}
+	
+	private void setupTable(ArrayList<FootballClub> footballClubs) {
 		// Column Names 
 		String[] columnNames = {
 				"Club", 
@@ -51,16 +63,6 @@ public class MyTableView extends JFrame {
 		
 		// Initialising the JTable
 		table = new JTable(tableModel);
-		table.setBounds(30, 40, 1200, 600); 
-		
-		// adding JTable table to JScrollPane 
-        JScrollPane scrollPanel = new JScrollPane(table); 
-        this.add(scrollPanel); 
-        
-        // Self (JFrame) size
-        this.setSize(1200, 700);
-        
-        // Self (JFrame) Visible = true 
-        this.setVisible(true); 
+		// table.setBounds(0, 0, 1200, 400); 
 	}
 }
