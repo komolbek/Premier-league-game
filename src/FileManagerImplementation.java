@@ -21,7 +21,7 @@ public class FileManagerImplementation implements FileManager {
 	@Override
 	public void writeDataToFile(ArrayList<FootballClub> array) {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(this.dataFilePath, true);
+			FileOutputStream fileOutputStream = new FileOutputStream(this.dataFilePath, false);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeInt(array.size());
 			for (FootballClub footballClub : array) {
