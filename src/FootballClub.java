@@ -2,6 +2,7 @@ import java.io.Serializable;
 
 public class FootballClub extends SportClub implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	//Private properties
 	private int wins;
 	private int draws;
@@ -16,6 +17,28 @@ public class FootballClub extends SportClub implements Serializable {
 		this.name     = name;
 		this.location = location;
 	}
+	
+	/**
+	 * 
+	 * Name getter and Setter
+	 */
+	
+	@Override
+	public String getName() { return super.getName(); }
+	
+	@Override
+	public void setName(String name) { super.setName(name); }
+	
+	/**
+	 * 
+	 * Location getter and Setter
+	 */
+	
+	@Override
+	public String getLocation() { return super.getLocation(); }
+	
+	@Override
+	public void setLocation(String location) { super.setLocation(location); }
 	
 	/**
 	 * 
