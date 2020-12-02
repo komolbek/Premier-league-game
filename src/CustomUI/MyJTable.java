@@ -1,7 +1,5 @@
 package CustomUI;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 //Packages to import 
 import javax.swing.JFrame; 
 import javax.swing.JScrollPane; 
@@ -11,6 +9,8 @@ import javax.swing.JTable;
  	Custom, Reusable MyJTable class
  */
 public class MyJTable extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
 	
 	// Table property
 	JTable table;
