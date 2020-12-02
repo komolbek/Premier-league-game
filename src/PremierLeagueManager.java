@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -34,10 +33,8 @@ public final class PremierLeagueManager implements LeagueManager {
 		this.input = new BufferedReader(new InputStreamReader(System.in));
 		this.fileManager = new FileManagerImplementation();
 		
-		try {
-			this.fileManager.readTrainsFromFile(this.footballClubs);
-		} catch (FileNotFoundException e) {
-			System.out.printf("### ERROR ### %s", e.getLocalizedMessage());
+		if (this.fileManager.isDataAvailable()) {
+			this.footballClubs = this.fileManager.readDataFromFile();
 		}
 	}
 	/** PUBLIC_METHODS */
@@ -51,7 +48,8 @@ public final class PremierLeagueManager implements LeagueManager {
 				+ "PRESS 3 - Select football club and display its statistics\n"
 				+ "PRESS 4 - Display Premier League table\n" 
 				+ "PRESS 5 - Add played match\n"
-				+ "PRESS 6 - START Grapical Interface\n");
+				+ "PRESS 6 - Save all changes\n"
+				+ "PRESS 7 - START Grapical Interface\n");
 		int selectedOption;
 
 		try {
@@ -65,11 +63,13 @@ public final class PremierLeagueManager implements LeagueManager {
 			case 3: { this.displayfootballClubStatistics(); break; }
 			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
 			case 5: { this.addPlayedGame(); break; }
-			case 6: {
+			case 6: { 
 				this.fileManager.writeDataToFile(this.footballClubs);
-				this.fileManager.readTrainsFromFile(this.footballClubs);
+				this.footballClubs = this.fileManager.readDataFromFile();
+				this.showUserOptions();
 				break;
-			}
+				}
+			case 7: { return; }
 			default:
 				System.out.printf("You selected %d which out of range value\n", selectedOption);
 				this.showUserOptions();
@@ -194,7 +194,7 @@ public final class PremierLeagueManager implements LeagueManager {
 	 * @addPlayedGame
 	 */
 	private void addPlayedGame() {
-		if (footballClubs.size() > 0) {
+		if (footballClubs.size() > 1) {
 			System.out.print("\n###### Please select number:\n");
 			
 			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
@@ -256,7 +256,7 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.printf("### ERROR ### Please enter only Numbers. %s\n", e.getLocalizedMessage());
 			}
 		} else {
-			System.out.print("\n###### Premier League table is empty:");
+			System.out.print("\n###### The PL table is EPMTY or NOT ENOUGH clubs");
 		}
 		this.showUserOptions();
 	}
