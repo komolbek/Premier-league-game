@@ -47,7 +47,7 @@ public class FileManagerImplementation implements FileManager {
 					objectOutputStream.writeObject(footballClub);;
 				}
 			}
-			System.out.println("###### SUCCESS ###### Data loaded to the file");
+			System.out.println("###### SUCCESS ###### Football Clubs data loaded to the file");
 			objectOutputStream.close();
 			fileOutputStream.close();
 		} catch (IOException e) {
@@ -67,7 +67,7 @@ public class FileManagerImplementation implements FileManager {
 				tempArrayList.add((FootballClub) objectInputStream.readObject());
 			}
 			if (tempArrayList.size() > 1) {
-				System.out.println("###### SUCCESS ###### Data loaded from the file");
+				System.out.println("###### SUCCESS ###### Football Clubs data loaded from the file");
 			}
 			objectInputStream.close();
 			fileInputStream.close();
@@ -93,7 +93,7 @@ public class FileManagerImplementation implements FileManager {
 					objectOutputStream.writeObject(playedGame);;
 				}
 			}
-			System.out.println("###### SUCCESS ###### Data loaded to the file");
+			System.out.println("###### SUCCESS ###### Played games loaded to the file");
 			objectOutputStream.close();
 			fileOutputStream.close();
 		} catch (IOException e) {
@@ -113,7 +113,7 @@ public class FileManagerImplementation implements FileManager {
 				tempArrayList.add((PlayedGame) objectInputStream.readObject());
 			}
 			if (tempArrayList.size() > 1) {
-				System.out.println("###### SUCCESS ###### Data loaded from the file");
+				System.out.println("###### SUCCESS ###### Played games loaded from the file");
 			}
 			objectInputStream.close();
 			fileInputStream.close();
