@@ -107,7 +107,7 @@ public final class PremierLeagueManager implements LeagueManager {
 			this.footballClubs.add(footballClub);
 			
 			System.out.printf("\n###### SUCCESS ###### Name: %s is added to the table",
-					footballClub.name.toUpperCase());
+					footballClub.getName().toUpperCase());
 		} catch (Exception e) {
 			System.out.printf("Please use only letters. %s\n", e.getLocalizedMessage());
 		}
@@ -128,7 +128,7 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.print("Select: ");
 				selectedOption = Integer.parseInt(input.readLine());
 
-				System.out.printf("\n###### You removed %s\n", footballClubs.get(selectedOption - 1).name);
+				System.out.printf("\n###### You removed %s\n", footballClubs.get(selectedOption - 1).getName());
 				this.footballClubs.remove(selectedOption - 1);
 				this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS);
 			} catch (Exception e) {
@@ -153,10 +153,10 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.print("Select: ");
 				selectedOption = Integer.parseInt(input.readLine());
 
-				System.out.printf("\n###### %s statistics:\n", footballClubs.get(selectedOption - 1).name.toUpperCase());
+				System.out.printf("\n###### %s statistics:\n", footballClubs.get(selectedOption - 1).getName().toUpperCase());
 				
 				for (FootballClub fClub : footballClubs) {
-					if (fClub.name == footballClubs.get(selectedOption - 1).name) {
+					if (fClub.getName() == footballClubs.get(selectedOption - 1).getName()) {
 						System.out.printf(fClub.toString());
 						break;
 					}
@@ -180,7 +180,7 @@ public final class PremierLeagueManager implements LeagueManager {
 			case BY_NAME: {
 				for (int i = 0; i < this.footballClubs.size(); i++) {
 					if (this.footballClubs.get(i) != null) {
-						System.out.printf("PRESS %d - %s\n", i + 1, this.footballClubs.get(i).name);
+						System.out.printf("PRESS %d - %s\n", i + 1, this.footballClubs.get(i).getName());
 					}
 				}
 				return;
@@ -258,7 +258,6 @@ public final class PremierLeagueManager implements LeagueManager {
 								fClub.setPoints(3);
 							} 
 						} else if (fClub == footballClubs.get(secondFClub - 1)) {
-							fClub.setPlayedMatches(1);
 							fClub.setScoredGoals(secondFClubScoredGoals);
 							fClub.setReceivedGoals(firstFClubScoredGoals);
 
@@ -270,8 +269,8 @@ public final class PremierLeagueManager implements LeagueManager {
 					} else if (count == 2) { break; }
 				}
 				
-				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstFClub - 1).name,
-						firstFClubScoredGoals, secondFClubScoredGoals, footballClubs.get(secondFClub - 1).name);
+				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstFClub - 1).getName(),
+						firstFClubScoredGoals, secondFClubScoredGoals, footballClubs.get(secondFClub - 1).getName());
 			} catch (Exception e) {
 				System.out.printf("### ERROR ### Please enter only Numbers. %s\n", e.getLocalizedMessage());
 			}
