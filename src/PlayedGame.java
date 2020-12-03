@@ -34,8 +34,8 @@ public class PlayedGame {
 	}
 
 	private void setGameResult(FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
-		this.gameResult = fClub1.name + " " + fClub1Goals 
-				+ "-" + fClub2Goals + " " + fClub2.name 
+		this.gameResult = fClub1.getName() + " " + fClub1Goals 
+				+ "-" + fClub2Goals + " " + fClub2.getName() 
 				+ " in " + String.valueOf(this.gameDate);
 	}
 }
