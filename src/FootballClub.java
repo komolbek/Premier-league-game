@@ -1,7 +1,4 @@
 import java.io.Serializable;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class FootballClub extends SportClub implements Serializable {
 	
@@ -14,31 +11,11 @@ public class FootballClub extends SportClub implements Serializable {
 	private int receivedGoals;
 	private int playedMatches;
 	private int points;
-	private Date createDate;
 
 	//Constructor
-	public FootballClub(String name, String location, String createdAt) {
+	public FootballClub(String name, String location) {
 		this.name = name;
 		this.location = location;
-		this.setCreateDate(createdAt);
-	}
-	
-	/**
-	 * CreateDate getter and Setter
-	 */
-	
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String dateInString) {
-		Date date;
-		try {
-			date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(dateInString);
-			this.createDate = date;
-		} catch (ParseException e) {
-			System.out.println(e.getLocalizedMessage());
-		}
 	}
 	
 	/**
