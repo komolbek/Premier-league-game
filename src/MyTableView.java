@@ -13,6 +13,8 @@ import java.util.Comparator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import apple.laf.JRSUIConstants.ScrollBarHit;
+
 /**
  	Custom, Reusable MyJTable class
  */
@@ -22,6 +24,7 @@ public class MyTableView extends JFrame implements ActionListener {
 	private ArrayList<FootballClub> footballClubs;
 	
 	private JTable table;
+	private DefaultTableModel tableModel;
 	private Container mainContainer;
 	private JTextField searchTextField;
 	
@@ -75,9 +78,9 @@ public class MyTableView extends JFrame implements ActionListener {
 		           return Integer.valueOf(p2.getPoints()).compareTo(p1.getPoints());
 		        }
 			});
-			if (this.table != null) {
-				this.table.repaint();
-			}
+			
+			if (this.table != null || this.tableModel != null) { this.updateTable(); }
+			
 			break;
 		}
 		case BY_DATE_CREATED: {
@@ -90,9 +93,7 @@ public class MyTableView extends JFrame implements ActionListener {
 		           return Integer.valueOf(p2.getScoredGoals()).compareTo(p1.getScoredGoals());
 		        }
 			});
-			if (this.table != null) {
-				this.table.repaint();
-			}
+			if (this.tableModel != null || this.tableModel != null) { this.updateTable(); }
 			break;
 		}
 		case BY_WINS: {
@@ -101,9 +102,9 @@ public class MyTableView extends JFrame implements ActionListener {
 		           return Integer.valueOf(p2.getWins()).compareTo(p1.getWins());
 		        }
 			});
-			if (this.table != null) {
-				this.table.repaint();
-			}
+			
+			if (this.table != null || this.tableModel != null) { this.updateTable(); }
+			
 			break;
 		}	
 		default:
@@ -124,25 +125,53 @@ public class MyTableView extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	private void updateTable() {
+		if (tableModel.getRowCount() > 0) {
+		    for (int i = tableModel.getRowCount() - 1; i > -1; i--) {
+		    	tableModel.removeRow(i);
+		    }
+		}
+		
+		for (int i = 0; i < this.footballClubs.size(); i++){
+		   String name = this.footballClubs.get(i).getName();
+		   int wins = this.footballClubs.get(i).getWins();
+		   int draws = this.footballClubs.get(i).getDraws();
+		   int defeats = this.footballClubs.get(i).getDefeats();
+		   int goalScored = this.footballClubs.get(i).getScoredGoals();
+		   int goalReceived = this.footballClubs.get(i).getReceivedGoals();
+		   int totalMatches = this.footballClubs.get(i).getPlayedMatches();
+		   int points = this.footballClubs.get(i).getPoints();
+
+		   Object[] data = { name, wins, draws, defeats, goalScored, goalReceived, totalMatches, points };
+
+		   tableModel.addRow(data);
+		}
+		
+		table.repaint();
+		table.revalidate();
+		this.repaint();
+		this.revalidate();
+	}
+	
 	private void setupTable() {
 		String[] columnNames = {"Club","Wins","Draws","Defeats","Goals scored","Goals received","Played matches","Points"};
 		
-		DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+		this.tableModel = new DefaultTableModel(columnNames, 0);
 		
 		for (int i = 0; i < this.footballClubs.size(); i++){
-			   String name = this.footballClubs.get(i).getName();
-			   int wins = this.footballClubs.get(i).getWins();
-			   int draws = this.footballClubs.get(i).getDraws();
-			   int defeats = this.footballClubs.get(i).getDefeats();
-			   int goalScored = this.footballClubs.get(i).getScoredGoals();
-			   int goalReceived = this.footballClubs.get(i).getReceivedGoals();
-			   int totalMatches = this.footballClubs.get(i).getPlayedMatches();
-			   int points = this.footballClubs.get(i).getPoints();
+		   String name = this.footballClubs.get(i).getName();
+		   int wins = this.footballClubs.get(i).getWins();
+		   int draws = this.footballClubs.get(i).getDraws();
+		   int defeats = this.footballClubs.get(i).getDefeats();
+		   int goalScored = this.footballClubs.get(i).getScoredGoals();
+		   int goalReceived = this.footballClubs.get(i).getReceivedGoals();
+		   int totalMatches = this.footballClubs.get(i).getPlayedMatches();
+		   int points = this.footballClubs.get(i).getPoints();
 
-			   Object[] data = { name, wins, draws, defeats, goalScored, goalReceived, totalMatches, points };
+		   Object[] data = { name, wins, draws, defeats, goalScored, goalReceived, totalMatches, points };
 
-			   tableModel.addRow(data);
-			}
+		   tableModel.addRow(data);
+		}
 		
 		table = new JTable(tableModel);
 	}
@@ -204,7 +233,12 @@ public class MyTableView extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		
+		if (e.getSource() == this.sortByPointsButton) {
+			this.sortTableDataBy(SortBy.BY_POINTS);
+		} else if (e.getSource() == this.sortByGoalSButton) {
+			this.sortTableDataBy(SortBy.BY_GOALS);
+		} else if (e.getSource() == this.sortByWinsButton) {
+			this.sortTableDataBy(SortBy.BY_WINS);
+		}
 	}
 }
