@@ -35,11 +35,16 @@ public final class PremierLeagueManager implements LeagueManager {
 
 	public PremierLeagueManager() {
 		this.footballClubs = new  ArrayList<FootballClub>();
+		this.playedGames = new  ArrayList<PlayedGame>();
 		this.input = new BufferedReader(new InputStreamReader(System.in));
 		this.fileManager = new FileManagerImplementation();
 		
-		if (this.fileManager.isDataAvailable()) {
-			this.footballClubs = this.fileManager.readDataFromFile();
+		if (this.fileManager.isDataAvailable(FileDataType.FOOTBALL_CLUBS)) {
+			this.footballClubs = this.fileManager.readFootballClubsFromFile();
+		}
+		
+		if (this.fileManager.isDataAvailable(FileDataType.PLAYED_GAMES)) {
+			this.playedGames = this.fileManager.readPlayedGamesFromFile();
 		}
 	}
 	/** PUBLIC_METHODS */
@@ -52,7 +57,7 @@ public final class PremierLeagueManager implements LeagueManager {
 				+ "PRESS 2 - Remove football club from Premier League\n"
 				+ "PRESS 3 - Select football club and display its statistics\n"
 				+ "PRESS 4 - Display Premier League table\n" 
-				+ "PRESS 5 - Add played match\n"
+				+ "PRESS 5 - Add played game\n"
 				+ "PRESS 6 - Save all changes\n"
 				+ "PRESS 7 - START Grapical Interface\n");
 		int selectedOption;
@@ -69,16 +74,28 @@ public final class PremierLeagueManager implements LeagueManager {
 			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
 			case 5: { this.addPlayedGame(); break; }
 			case 6: { 
-				if (footballClubs.size() > 1) {
-					this.fileManager.writeDataToFile(this.footballClubs);
-					this.footballClubs = this.fileManager.readDataFromFile();
+				if ((footballClubs.size() > 5) && (playedGames.size() > 3)) {
+					this.fileManager.writeFootballClubsToFile(this.footballClubs);
+					this.footballClubs = this.fileManager.readFootballClubsFromFile();
+					
+					this.fileManager.writePlayedGamesToFile(this.playedGames);
+					this.playedGames = this.fileManager.readPlayedGamesFromFile();
 				} else {
-					System.out.print("\n###### The PL table is EPMTY or NOT ENOUGH clubs");
+					System.out.print("\n###### PLEASE add at least 6 CLUBS and 4 played games");
 				}
+				
 				this.showUserOptions();
 				break;
 				}
-			case 7: { return; }
+			case 7: { 
+				if ((footballClubs.size() > 5) && (playedGames.size() > 3)) {
+					return;
+				} else {
+					System.out.print("\n###### PLEASE add at least 6 CLUBS and 4 played games");
+					this.showUserOptions();
+					break;
+				}
+				}
 			default:
 				System.out.printf("You selected %d which out of range value\n", selectedOption);
 				this.showUserOptions();
@@ -232,10 +249,9 @@ public final class PremierLeagueManager implements LeagueManager {
 						footballClubs.get(secondFClub - 1), 
 						secondFClubScoredGoals);
 				
-				this.playedGames = new ArrayList<PlayedGame>();
 				this.playedGames.add(playedGame);
 
-				for (FootballClub fClub : footballClubs) {
+				for (FootballClub fClub : footballClubs) { // FIXME: optimise this approach
 					if (fClub != null) {
 						if ((fClub == footballClubs.get(firstFClub - 1)) || (fClub == footballClubs.get(secondFClub - 1))) {
 							fClub.setPlayedMatches(1);
