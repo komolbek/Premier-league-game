@@ -128,7 +128,7 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.print("Select: ");
 				selectedOption = Integer.parseInt(input.readLine());
 
-				System.out.printf("\n###### You removed %s\n", footballClubs.get(selectedOption - 1).name.toUpperCase());
+				System.out.printf("\n###### You removed %s\n", footballClubs.get(selectedOption - 1).name);
 				this.footballClubs.remove(selectedOption - 1);
 				this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS);
 			} catch (Exception e) {
@@ -221,32 +221,36 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.print("Add SECOND football club scored GOALS: ");
 				secondFClubScoredGoals = Integer.parseInt(input.readLine());
 				
+				//Create played game with date and all needed results
 				PlayedGame playedGame = new PlayedGame("03/12/2020", 
-						footballClubs.get(firstFClub), 
+						footballClubs.get(firstFClub - 1), 
 						firstFClubScoredGoals, 
-						footballClubs.get(secondFClub), 
+						footballClubs.get(secondFClub - 1), 
 						secondFClubScoredGoals);
 				
 				this.playedGames.add(playedGame);
 
 				for (FootballClub fClub : footballClubs) {
 					if (fClub != null) {
-						if (fClub.name == footballClubs.get(firstFClub - 1).name) {
+						if ((fClub == footballClubs.get(firstFClub - 1)) || (fClub == footballClubs.get(secondFClub - 1))) {
 							fClub.setPlayedMatches(1);
-							fClub.setScoredGoals(firstFClubScoredGoals);
-							fClub.setReceivedGoals(secondFClubScoredGoals);
-
-							if (firstFClubScoredGoals > secondFClubScoredGoals) {
-								fClub.setWins(1);
-								fClub.setPoints(3);
-							} else if (firstFClubScoredGoals == secondFClubScoredGoals) {
+							
+							if (firstFClubScoredGoals == secondFClubScoredGoals) {
 								fClub.setDraws(1);
 								fClub.setPoints(1);
 							} else {
 								fClub.setDefeats(1);
 							}
 							count++;
-						} else if (fClub.name == footballClubs.get(secondFClub - 1).name) {
+						} else if (fClub == footballClubs.get(firstFClub - 1)) {
+							fClub.setScoredGoals(firstFClubScoredGoals);
+							fClub.setReceivedGoals(secondFClubScoredGoals);
+
+							if (firstFClubScoredGoals > secondFClubScoredGoals) {
+								fClub.setWins(1);
+								fClub.setPoints(3);
+							} 
+						} else if (fClub == footballClubs.get(secondFClub - 1)) {
 							fClub.setPlayedMatches(1);
 							fClub.setScoredGoals(secondFClubScoredGoals);
 							fClub.setReceivedGoals(firstFClubScoredGoals);
@@ -254,17 +258,9 @@ public final class PremierLeagueManager implements LeagueManager {
 							if (firstFClubScoredGoals < secondFClubScoredGoals) {
 								fClub.setWins(1);
 								fClub.setPoints(3);
-							} else if (firstFClubScoredGoals == secondFClubScoredGoals) {
-								fClub.setDraws(1);
-								fClub.setPoints(1);
-							} else {
-								fClub.setDefeats(1);
-							}
-							count++;
+							} 
 						}
-					} else if (count == 2) {
-						break;
-					}
+					} else if (count == 2) { break; }
 				}
 				
 				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstFClub - 1).name,
@@ -279,16 +275,19 @@ public final class PremierLeagueManager implements LeagueManager {
 	}
 	/** PUBLIC_METHODS*/
 	/**
-	 * To see how many Football clubs the Premier League
-	 * manager manages we can use this @getfootballClubs
-	 * @getter method that returns a list of objects of 
-	 * FootballClub class 
+	 * To use Football clubs in the GUI part we can 
+	 * use this @getfootballClubs getter method that 
+	 * returns a list of objects of FootballClub class 
 	 */
 	@Override
 	public ArrayList<FootballClub> getfootballClubs() {
 		return this.footballClubs;
 	}
-	
+	/**
+	 * To use PlayedGames in the GUI part we can 
+	 * use this @getPlayedGames getter method that 
+	 * returns a list of objects of PlayedGames class 
+	 */
 	@Override
 	public ArrayList<PlayedGame> getPlayedGames() {
 		return this.playedGames;
