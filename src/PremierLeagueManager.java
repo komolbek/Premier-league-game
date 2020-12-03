@@ -228,6 +228,7 @@ public final class PremierLeagueManager implements LeagueManager {
 						footballClubs.get(secondFClub - 1), 
 						secondFClubScoredGoals);
 				
+				this.playedGames = new ArrayList<PlayedGame>();
 				this.playedGames.add(playedGame);
 
 				for (FootballClub fClub : footballClubs) {
