@@ -13,8 +13,6 @@ import java.util.Comparator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import apple.laf.JRSUIConstants.ScrollBarHit;
-
 /**
  	Custom, Reusable MyJTable class
  */
