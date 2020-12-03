@@ -9,6 +9,7 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Random;
 
 import javax.swing.*;
@@ -21,9 +22,14 @@ public class MyTableView extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	private ArrayList<FootballClub> footballClubs;
+	private ArrayList<PlayedGame> playedGames;
 
 	private JTable table;
+	private JTable playedGamesTable;
+	
 	private DefaultTableModel tableModel;
+	private DefaultTableModel playedGamesTableModel;
+	
 	private Container mainContainer;
 	private JTextField searchTextField;
 
@@ -50,26 +56,27 @@ public class MyTableView extends JFrame implements ActionListener {
 	/**
 	 * @CONSTRUCTOR
 	 */
-	public MyTableView(ArrayList<FootballClub> footballClubs) {
-		this.setFootballClubs(footballClubs);
+	public MyTableView(ArrayList<FootballClub> footballClubs, ArrayList<PlayedGame> playedGames) {
+		this.footballClubs = footballClubs;
+		this.playedGames = playedGames;
 		this.sortTableDataBy(SortBy.BY_POINTS);
 		this.setupSelf();
 		this.mainContainer = this.getContentPane();
 		this.mainContainer.setLayout(new BorderLayout(15, 15));
 		this.setupTable();
 		this.setupScrollPanel();
+		this.setupPlayedMatchesTable();
+		setupPlayedMatchesTableScrollPanel();
 		this.setupLabelsAndTextFiels();
 		this.setupButtons("Points", "Goal Scored", "Wins", "Generate", "Search");
 		this.setupContainers();
 	}
 
 	/**
-	 * DATA_LOGIC_METHODS
+	 * @sortTableDataBy sorts data in tables by 
+	 * @SortBy cases. After sorting it updates 
+	 * table data.
 	 */
-
-	private void setFootballClubs(ArrayList<FootballClub> footballClubs) {
-		this.footballClubs = footballClubs;
-	}
 
 	private void sortTableDataBy(SortBy sortBy) {
 		switch (sortBy) {
@@ -122,10 +129,10 @@ public class MyTableView extends JFrame implements ActionListener {
 		Random random = new Random();
 
 		int footballClub1 = random.nextInt(this.footballClubs.size()) - 1;
-		int goalsOfFootballClub1 = random.nextInt(8);
+		int goalsOfFootballClub1 = random.nextInt(6);
 
 		int footballClub2 = random.nextInt(this.footballClubs.size() - 1) - 1;
-		int goalsOfFootballClub2 = random.nextInt(8);
+		int goalsOfFootballClub2 = random.nextInt(6);
 
 		int count = 0;
 
@@ -242,8 +249,35 @@ public class MyTableView extends JFrame implements ActionListener {
 
 	private void setupScrollPanel() {
 		JScrollPane scrollPanel = new JScrollPane(table);
-		scrollPanel.setBounds(0, 0, 1200, 400);
+		scrollPanel.setBounds(0, 0, 900, 400);
 		this.mainContainer.add(scrollPanel);
+	}
+	
+	private void setupPlayedMatchesTable() {
+		String[] columnNames = { "Played games", "Date" };
+
+		this.playedGamesTableModel = new DefaultTableModel(columnNames, 0);
+		
+		for (int i = 0; i < this.playedGames.size(); i++) {
+			String gameResult = this.playedGames.get(i).getGameResult();
+			String playedDate = this.playedGames.get(i).getGameDate();
+		
+			Object[] data = { gameResult, playedDate};
+		
+			playedGamesTableModel.addRow(data);
+		}
+		
+		playedGamesTable = new JTable(playedGamesTableModel);
+	}
+	
+	private void setupPlayedMatchesTableScrollPanel() {
+		JScrollPane scrollPanel = new JScrollPane(playedGamesTable);
+		scrollPanel.setBounds(0, 0, 250, 400);
+		
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new FlowLayout(1));
+		rightPanel.add(scrollPanel);
+		this.mainContainer.add(rightPanel, BorderLayout.EAST);
 	}
 
 	private void setupLabelsAndTextFiels() {

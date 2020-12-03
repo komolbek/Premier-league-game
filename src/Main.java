@@ -5,7 +5,11 @@ public class Main {
 		premierLeagueManager.showUserOptions();
 	
 		// Custom created JTable object. Custom classes are efficient to be reused 
-		MyTableView myTableView = new MyTableView(premierLeagueManager.getfootballClubs());
+		MyTableView myTableView = new MyTableView(
+				premierLeagueManager.getfootballClubs(), 
+				premierLeagueManager.getPlayedGames()
+				);
+		
 		myTableView.revalidate();
 	}
 }
