@@ -1,8 +1,14 @@
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PlayedGame {
+public class PlayedGame implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Date gameDate;
 	private String gameResult;
 	
@@ -13,8 +19,8 @@ public class PlayedGame {
 	/**
 	 * @GameDate getter and Setter
 	 */
-	public Date getGameDate() {
-		return gameDate;
+	public String getGameDate() {
+		return new SimpleDateFormat("dd/MM/yyyy").format(this.gameDate);
 	}
 	
 	private void setGameDate(String gameDate) {
@@ -35,7 +41,6 @@ public class PlayedGame {
 
 	private void setGameResult(FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
 		this.gameResult = fClub1.getName() + " " + fClub1Goals 
-				+ "-" + fClub2Goals + " " + fClub2.getName() 
-				+ " in " + String.valueOf(this.gameDate);
+				+ "-" + fClub2Goals + " " + fClub2.getName();
 	}
 }
