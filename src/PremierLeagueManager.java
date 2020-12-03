@@ -209,6 +209,7 @@ public final class PremierLeagueManager implements LeagueManager {
 			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
 			
 			int firstFClub, firstFClubScoredGoals, secondFClub, secondFClubScoredGoals, count = 0;
+			String gameDate;
 
 			try {
 				System.out.print("\nSelect FIRST football club: ");
@@ -221,8 +222,11 @@ public final class PremierLeagueManager implements LeagueManager {
 				System.out.print("Add SECOND football club scored GOALS: ");
 				secondFClubScoredGoals = Integer.parseInt(input.readLine());
 				
+				System.out.print("Select game played date in format 23/12/2019: ");
+				gameDate = input.readLine();
+				
 				//Create played game with date and all needed results
-				PlayedGame playedGame = new PlayedGame("03/12/2020", 
+				PlayedGame playedGame = new PlayedGame(gameDate, 
 						footballClubs.get(firstFClub - 1), 
 						firstFClubScoredGoals, 
 						footballClubs.get(secondFClub - 1), 
@@ -243,7 +247,9 @@ public final class PremierLeagueManager implements LeagueManager {
 								fClub.setDefeats(1);
 							}
 							count++;
-						} else if (fClub == footballClubs.get(firstFClub - 1)) {
+						} 
+						
+						if (fClub == footballClubs.get(firstFClub - 1)) {
 							fClub.setScoredGoals(firstFClubScoredGoals);
 							fClub.setReceivedGoals(secondFClubScoredGoals);
 
