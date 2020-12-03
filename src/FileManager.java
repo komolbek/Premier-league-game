@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 
 public interface FileManager {
-	public void writeDataToFile(ArrayList<FootballClub> array);
-	public boolean isDataAvailable();
-	public ArrayList<FootballClub> readDataFromFile();
+	public boolean isDataAvailable(FileDataType fileDataType);
+	
+	public void writeFootballClubsToFile(ArrayList<FootballClub> array);
+	public ArrayList<FootballClub> readFootballClubsFromFile();
+	
+	public void writePlayedGamesToFile(ArrayList<PlayedGame> array);
+	public ArrayList<PlayedGame> readPlayedGamesFromFile();
 }
