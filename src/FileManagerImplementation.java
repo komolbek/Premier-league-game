@@ -26,10 +26,10 @@ public class FileManagerImplementation implements FileManager {
 			objectOutputStream.writeInt(array.size());
 			for (FootballClub footballClub : array) {
 				if (footballClub != null) {
-					System.out.println(footballClub.toString());
 					objectOutputStream.writeObject(footballClub);;
 				}
 			}
+			System.out.println("###### SUCCESS ###### Data loaded to the file");
 			objectOutputStream.close();
 			fileOutputStream.close();
 		} catch (IOException e) {
@@ -47,7 +47,9 @@ public class FileManagerImplementation implements FileManager {
 			System.out.println();
 			for (int i = 0; i < footballClubsCount; i++) {
 				tempArrayList.add((FootballClub) objectInputStream.readObject());
-				System.out.println(tempArrayList.get(i).toString());
+			}
+			if (tempArrayList.size() > 1) {
+				System.out.println("###### SUCCESS ###### Data loaded from the file");
 			}
 			objectInputStream.close();
 			fileInputStream.close();
