@@ -64,8 +64,12 @@ public final class PremierLeagueManager implements LeagueManager {
 			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
 			case 5: { this.addPlayedGame(); break; }
 			case 6: { 
-				this.fileManager.writeDataToFile(this.footballClubs);
-				this.footballClubs = this.fileManager.readDataFromFile();
+				if (footballClubs.size() > 1) {
+					this.fileManager.writeDataToFile(this.footballClubs);
+					this.footballClubs = this.fileManager.readDataFromFile();
+				} else {
+					System.out.print("\n###### The PL table is EPMTY or NOT ENOUGH clubs");
+				}
 				this.showUserOptions();
 				break;
 				}
