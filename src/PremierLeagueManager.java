@@ -10,6 +10,10 @@ public final class PremierLeagueManager implements LeagueManager {
 	 */
 	private ArrayList<FootballClub> footballClubs;
 	/**
+	 * @playedGames is a list of unique objects of PlayedGame class
+	 */
+	private ArrayList<PlayedGame> playedGames;
+	/**
 	 * @input is a user console input reader. 
 	 * It is used in PremierLeagueManager class's
 	 * several methods, that's why I moved it to
@@ -20,11 +24,12 @@ public final class PremierLeagueManager implements LeagueManager {
 	 * @fileManager 
 	 */
 	private FileManager fileManager;
-	
-	private enum DisplayPremierLeagueTableType {
-		BY_NAME,
-		BY_STATISTICS
-	}
+	/**
+	 * @DisplayPremierLeagueTableType is a private helper 
+	 * enum providing BY_NAME, BY_STATISCTICS options to 
+	 * display table in console
+	 */
+	private enum DisplayPremierLeagueTableType { BY_NAME, BY_STATISTICS }
 	
 	/** CONSTRUCTOR */
 
@@ -203,45 +208,53 @@ public final class PremierLeagueManager implements LeagueManager {
 			
 			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
 			
-			int firstSelectClub, firstClubScoredGoals, secondSelectClub, secondClubScoredGoals, count = 0;
+			int firstFClub, firstFClubScoredGoals, secondFClub, secondFClubScoredGoals, count = 0;
 
 			try {
 				System.out.print("\nSelect FIRST football club: ");
-				firstSelectClub = Integer.parseInt(input.readLine());
+				firstFClub = Integer.parseInt(input.readLine());
 				System.out.print("Add FIRST football club scored GOALS: ");
-				firstClubScoredGoals = Integer.parseInt(input.readLine());
+				firstFClubScoredGoals = Integer.parseInt(input.readLine());
 
 				System.out.print("Select SECOND football club: ");
-				secondSelectClub = Integer.parseInt(input.readLine());
+				secondFClub = Integer.parseInt(input.readLine());
 				System.out.print("Add SECOND football club scored GOALS: ");
-				secondClubScoredGoals = Integer.parseInt(input.readLine());
+				secondFClubScoredGoals = Integer.parseInt(input.readLine());
+				
+				PlayedGame playedGame = new PlayedGame("03/12/2020", 
+						footballClubs.get(firstFClub), 
+						firstFClubScoredGoals, 
+						footballClubs.get(secondFClub), 
+						secondFClubScoredGoals);
+				
+				this.playedGames.add(playedGame);
 
 				for (FootballClub fClub : footballClubs) {
 					if (fClub != null) {
-						if (fClub.name == footballClubs.get(firstSelectClub - 1).name) {
+						if (fClub.name == footballClubs.get(firstFClub - 1).name) {
 							fClub.setPlayedMatches(1);
-							fClub.setScoredGoals(firstClubScoredGoals);
-							fClub.setReceivedGoals(secondClubScoredGoals);
+							fClub.setScoredGoals(firstFClubScoredGoals);
+							fClub.setReceivedGoals(secondFClubScoredGoals);
 
-							if (firstClubScoredGoals > secondClubScoredGoals) {
+							if (firstFClubScoredGoals > secondFClubScoredGoals) {
 								fClub.setWins(1);
 								fClub.setPoints(3);
-							} else if (firstClubScoredGoals == secondClubScoredGoals) {
+							} else if (firstFClubScoredGoals == secondFClubScoredGoals) {
 								fClub.setDraws(1);
 								fClub.setPoints(1);
 							} else {
 								fClub.setDefeats(1);
 							}
 							count++;
-						} else if (fClub.name == footballClubs.get(secondSelectClub - 1).name) {
+						} else if (fClub.name == footballClubs.get(secondFClub - 1).name) {
 							fClub.setPlayedMatches(1);
-							fClub.setScoredGoals(secondClubScoredGoals);
-							fClub.setReceivedGoals(firstClubScoredGoals);
+							fClub.setScoredGoals(secondFClubScoredGoals);
+							fClub.setReceivedGoals(firstFClubScoredGoals);
 
-							if (firstClubScoredGoals < secondClubScoredGoals) {
+							if (firstFClubScoredGoals < secondFClubScoredGoals) {
 								fClub.setWins(1);
 								fClub.setPoints(3);
-							} else if (firstClubScoredGoals == secondClubScoredGoals) {
+							} else if (firstFClubScoredGoals == secondFClubScoredGoals) {
 								fClub.setDraws(1);
 								fClub.setPoints(1);
 							} else {
@@ -254,8 +267,8 @@ public final class PremierLeagueManager implements LeagueManager {
 					}
 				}
 				
-				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstSelectClub - 1).name,
-						firstClubScoredGoals, secondClubScoredGoals, footballClubs.get(secondSelectClub - 1).name);
+				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstFClub - 1).name,
+						firstFClubScoredGoals, secondFClubScoredGoals, footballClubs.get(secondFClub - 1).name);
 			} catch (Exception e) {
 				System.out.printf("### ERROR ### Please enter only Numbers. %s\n", e.getLocalizedMessage());
 			}
@@ -274,5 +287,10 @@ public final class PremierLeagueManager implements LeagueManager {
 	@Override
 	public ArrayList<FootballClub> getfootballClubs() {
 		return this.footballClubs;
+	}
+	
+	@Override
+	public ArrayList<PlayedGame> getPlayedGames() {
+		return this.playedGames;
 	}
 }
