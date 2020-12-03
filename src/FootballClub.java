@@ -23,11 +23,11 @@ public class FootballClub extends SportClub implements Serializable {
 	/**
 	 * Name getter and Setter
 	 */
-	
+	@Override
 	public String getName() { 
 		return this.name; 
 	}
-	
+	@Override
 	public void setName(String name) { 
 		this.name = name; 
 	}
@@ -35,11 +35,11 @@ public class FootballClub extends SportClub implements Serializable {
 	/**
 	 * Location getter and Setter
 	 */
-	
+	@Override
 	public String getLocation() { 
 		return this.location; 
 	}
-	
+	@Override
 	public void setLocation(String location) { 
 		this.location = location; 
 	}
