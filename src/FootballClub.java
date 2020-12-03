@@ -17,9 +17,10 @@ public class FootballClub extends SportClub implements Serializable {
 	private Date createDate;
 
 	//Constructor
-	public FootballClub(String name, String location) {
-		this.name     = name;
+	public FootballClub(String name, String location, String createdAt) {
+		this.name = name;
 		this.location = location;
+		this.setCreateDate(createdAt);
 	}
 	
 	/**
@@ -45,10 +46,14 @@ public class FootballClub extends SportClub implements Serializable {
 	 */
 	
 	@Override
-	public String getName() { return super.getName(); }
+	public String getName() { 
+		return super.getName(); 
+	}
 	
 	@Override
-	public void setName(String name) { super.setName(name); }
+	public void setName(String name) { 
+		super.setName(name); 
+	}
 	
 	/**
 	 * Location getter and Setter
