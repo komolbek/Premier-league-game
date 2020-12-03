@@ -1,4 +1,7 @@
 import java.io.Serializable;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class FootballClub extends SportClub implements Serializable {
 	
@@ -11,7 +14,8 @@ public class FootballClub extends SportClub implements Serializable {
 	private int receivedGoals;
 	private int playedMatches;
 	private int points;
-	
+	private Date createDate;
+
 	//Constructor
 	public FootballClub(String name, String location) {
 		this.name     = name;
@@ -19,7 +23,24 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
+	 * CreateDate getter and Setter
+	 */
+	
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String dateInString) {
+		Date date;
+		try {
+			date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(dateInString);
+			this.createDate = date;
+		} catch (ParseException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+	}
+	
+	/**
 	 * Name getter and Setter
 	 */
 	
@@ -30,7 +51,6 @@ public class FootballClub extends SportClub implements Serializable {
 	public void setName(String name) { super.setName(name); }
 	
 	/**
-	 * 
 	 * Location getter and Setter
 	 */
 	
@@ -41,7 +61,6 @@ public class FootballClub extends SportClub implements Serializable {
 	public void setLocation(String location) { super.setLocation(location); }
 	
 	/**
-	 * 
 	 * Wins getter and Setter
 	 */
 	
@@ -54,7 +73,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * Draws getter and Setter
 	 */
 
@@ -67,7 +85,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * Defeats getter and Setter
 	 */
 
@@ -80,7 +97,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * ScoredGoals getter and Setter
 	 */
 
@@ -93,7 +109,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * ReceivedGoals getter and Setter
 	 */
 
@@ -106,7 +121,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * PlayedMatches getter and Setter
 	 */
 
@@ -119,7 +133,6 @@ public class FootballClub extends SportClub implements Serializable {
 	}
 	
 	/**
-	 * 
 	 * Points getter and Setter
 	 */
 
