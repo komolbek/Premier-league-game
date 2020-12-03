@@ -4,6 +4,8 @@ public class FootballClub extends SportClub implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	//Private properties
+	private String name;
+	private String location;
 	private int wins;
 	private int draws;
 	private int defeats;
@@ -14,33 +16,33 @@ public class FootballClub extends SportClub implements Serializable {
 
 	//Constructor
 	public FootballClub(String name, String location) {
-		this.name = name;
-		this.location = location;
+		this.setName(name);
+		this.setLocation(location);
 	}
 	
 	/**
 	 * Name getter and Setter
 	 */
 	
-	@Override
 	public String getName() { 
-		return super.getName(); 
+		return this.name; 
 	}
 	
-	@Override
 	public void setName(String name) { 
-		super.setName(name); 
+		this.name = name; 
 	}
 	
 	/**
 	 * Location getter and Setter
 	 */
 	
-	@Override
-	public String getLocation() { return super.getLocation(); }
+	public String getLocation() { 
+		return this.location; 
+	}
 	
-	@Override
-	public void setLocation(String location) { super.setLocation(location); }
+	public void setLocation(String location) { 
+		this.location = location; 
+	}
 	
 	/**
 	 * Wins getter and Setter
