@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PlayedGame implements Serializable {
 	/**
-	 * 
+	 *  Unique object ID 
 	 */
 	private static final long serialVersionUID = 1L;
 	

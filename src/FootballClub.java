@@ -14,7 +14,10 @@ public class FootballClub extends SportClub implements Serializable {
 	private int playedMatches;
 	private int points;
 
-	//Constructor
+	/**
+	 * @CONSTRUCTOR
+	 */
+	
 	public FootballClub(String name, String location) {
 		this.setName(name);
 		this.setLocation(location);

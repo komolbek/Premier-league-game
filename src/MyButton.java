@@ -3,6 +3,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+
+/**
+ * Custom reusable JButton class.
+ * Used in order to avoid some 
+ * boilerplate code 
+ */
+
 public class MyButton extends JButton {
 	
 	public MyButton(String title, ActionListener listener) {
