@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class PlayedGame implements Serializable {
@@ -9,10 +11,20 @@ public class PlayedGame implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Date gameDate;
+	private Date gameDate; // TODO: re-factor 
 	private String gameResult;
 	
-	public PlayedGame(String playedAt, FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
+	public PlayedGame(LocalDate playedAt, FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+		String formattedString = playedAt.format(formatter);
+		
+		this.setGameDate(formattedString);
+		this.setGameResult(fClub1, fClub1Goals, fClub2, fClub2Goals);
+	}
+	
+	public PlayedGame(String date, String playedAt, FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
+		this.setGameDate(date);
 		this.setGameDate(playedAt);
 		this.setGameResult(fClub1, fClub1Goals, fClub2, fClub2Goals);
 	}
@@ -21,14 +33,14 @@ public class PlayedGame implements Serializable {
 	 */
 	public String getGameDate() {
 		// Parse data format to string
-		return new SimpleDateFormat("dd/MM/yyyy").format(this.gameDate);
+		return new SimpleDateFormat("dd LLLL yyyy").format(this.gameDate);
 	}
 	
 	private void setGameDate(String gameDate) {
 		Date date;
 		try {
 			// Parse string to data format
-			date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(gameDate);
+			date = (Date) new SimpleDateFormat("dd LLLL yyyy").parse(gameDate);
 			this.gameDate = date;
 		} catch (ParseException e) {
 			System.out.println(e.getLocalizedMessage());
