@@ -20,12 +20,14 @@ public class PlayedGame implements Serializable {
 	 * @GameDate getter and Setter
 	 */
 	public String getGameDate() {
+		// Parse data format to string
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.gameDate);
 	}
 	
 	private void setGameDate(String gameDate) {
 		Date date;
 		try {
+			// Parse string to data format
 			date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(gameDate);
 			this.gameDate = date;
 		} catch (ParseException e) {
