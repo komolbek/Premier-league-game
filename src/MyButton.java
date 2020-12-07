@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 
@@ -16,6 +17,15 @@ public class MyButton extends JButton {
 		this.setText(title);
 		this.addActionListener(listener);
 		this.setFont(new Font("Comic sans", Font.BOLD, 15));
+	}
+	
+	public MyButton(String title, ActionListener listener, Color backgroundColor) {
+		this.setText(title);
+		this.addActionListener(listener);
+		this.setFont(new Font("Comic sans", Font.BOLD, 15));
+		this.setOpaque(true);
+		this.setBorderPainted(false);
+		this.setBackground(backgroundColor);
 	}
 	
 	public MyButton(String title, int x, ActionListener listener) {
