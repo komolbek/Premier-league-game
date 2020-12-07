@@ -49,7 +49,7 @@ public final class PremierLeagueManager implements LeagueManager {
 	}
 	/** PUBLIC_METHODS */
 	/** 
-	 * @showUserOptions
+	 * @showUserOptions prints possible user interaction option in the console
 	 */
 	public void showUserOptions() {
 		System.out.println("\n\n###### Please select options below:\n\n"
@@ -74,24 +74,24 @@ public final class PremierLeagueManager implements LeagueManager {
 			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
 			case 5: { this.addPlayedGame(); break; }
 			case 6: { 
-				if ((footballClubs.size() > 5) && (playedGames.size() > 3)) {
+				if ((footballClubs.size() > 3) && (playedGames.size() > 3)) {
 					this.fileManager.writeFootballClubsToFile(this.footballClubs);
 					this.footballClubs = this.fileManager.readFootballClubsFromFile();
 					
 					this.fileManager.writePlayedGamesToFile(this.playedGames);
 					this.playedGames = this.fileManager.readPlayedGamesFromFile();
 				} else {
-					System.out.print("\n###### PLEASE add at least 6 CLUBS and 4 played games");
+					System.out.print("\n###### PLEASE add at least 4 CLUBS and 4 played games");
 				}
 				
 				this.showUserOptions();
 				break;
 				}
 			case 7: { 
-				if ((footballClubs.size() > 5) && (playedGames.size() > 3)) {
+				if ((footballClubs.size() > 3) && (playedGames.size() > 3)) {
 					return;
 				} else {
-					System.out.print("\n###### PLEASE add at least 6 CLUBS and 4 played games");
+					System.out.print("\n###### PLEASE add at least 4 CLUBS and 4 played games");
 					this.showUserOptions();
 					break;
 				}
@@ -107,7 +107,7 @@ public final class PremierLeagueManager implements LeagueManager {
 		}
 	}
 	/** 
-	 * @createFootballClub
+	 * @createFootballClub creates object with its name and location using console input 
 	 */
 	private void createFootballClub() {
 		String name;
@@ -131,7 +131,7 @@ public final class PremierLeagueManager implements LeagueManager {
 		this.showUserOptions();
 	}
 	/** 
-	 * @deleteFootballClub
+	 * @deleteFootballClub removes selected football club from the arrayList and prints removed object
 	 */
 	private void deleteFootballClub() {
 		System.out.print("\n###### Please select number from list below:\n");
@@ -157,7 +157,7 @@ public final class PremierLeagueManager implements LeagueManager {
 		this.showUserOptions();
 	}
 	/** 
-	 * @displayfootballClubStatistics
+	 * @displayfootballClubStatistics shows the selected football club's statistics
 	 */
 	private void displayfootballClubStatistics() {
 		if (footballClubs.size() > 0) {
@@ -187,7 +187,8 @@ public final class PremierLeagueManager implements LeagueManager {
 		this.showUserOptions();
 	}
 	/** 
-	 * @displayPremierLeagueTable
+	 * @displayPremierLeagueTable prints particular football club's statistics 
+	 * or statistics of all created football clubs  
 	 */
 	private void displayPremierLeagueTable(DisplayPremierLeagueTableType type) {
 		if (footballClubs.size() > 0) {
@@ -217,9 +218,11 @@ public final class PremierLeagueManager implements LeagueManager {
 		this.showUserOptions();
 	}
 	/** 
-	 * @addPlayedGame
-	 */
-	private void addPlayedGame() {
+	 * @addPlayedGame asks user to select first football club and its score
+	 * and also ask to select second football club and its score. Then updates 
+	 * Selected clubs statistics and creates the played match with result and date
+	 */ 
+	private void addPlayedGame() { //TODO: add documentation
 		if (footballClubs.size() > 1) {
 			System.out.print("\n###### Please select number:\n");
 			
@@ -250,7 +253,7 @@ public final class PremierLeagueManager implements LeagueManager {
 						secondFClubScoredGoals);
 				
 				this.playedGames.add(playedGame);
-
+				
 				for (FootballClub fClub : footballClubs) { // FIXME: optimise this approach
 					if (fClub != null) {
 						if ((fClub == footballClubs.get(firstFClub - 1)) || (fClub == footballClubs.get(secondFClub - 1))) {

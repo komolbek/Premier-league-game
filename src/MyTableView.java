@@ -33,6 +33,12 @@ public class MyTableView extends JFrame implements ActionListener {
 	private Container mainContainer;
 	private JTextField searchTextField;
 
+	/**
+	 * @SortBy is used in GUI table providing finite
+	 * three types of displaying football clubs when 
+	 * user presses sorting buttons. And date view.
+	 */
+	
 	private enum SortBy {
 		BY_POINTS, BY_GOALS, BY_WINS, BY_DATE_CREATED
 	}
@@ -57,16 +63,38 @@ public class MyTableView extends JFrame implements ActionListener {
 	 * @CONSTRUCTOR
 	 */
 	public MyTableView(ArrayList<FootballClub> footballClubs, ArrayList<PlayedGame> playedGames) {
+		
+		// Assign footballClubs to local variable to use within the class 
 		this.footballClubs = footballClubs;
+		
+		// Assign playedGames to local variable to use within the class
 		this.playedGames = playedGames;
+		
+		/** Sort footballClub objects before they are displayed in table by their @points property */
 		this.sortTableDataBy(SortBy.BY_POINTS);
+		
+		// Setup self GUI properties like frame, size, layout etc
 		this.setupSelf();
+		
+		/** Assign mainContainer with ContentPane suing @self.getContentPane() */
 		this.mainContainer = this.getContentPane();
+		
+		// Define Vertical and Horizontal distance between main GUI panels
 		this.mainContainer.setLayout(new BorderLayout(15, 15));
+		
+		// Setup FootballClubsTable object,like create object, set its columns, data, size etc
 		this.setupTable();
+		
+		// Setup FootballClubsScrollPanel object, add table, set size etc
 		this.setupScrollPanel();
+		
+		// Setup PlayedMatchesTable object,like create object, set its columns, data, size etc
 		this.setupPlayedMatchesTable();
-		setupPlayedMatchesTableScrollPanel();
+		
+		// Setup PlayedMatchesScrollPanel object, add table, set size etc
+		this.setupPlayedMatchesTableScrollPanel();
+		
+		// Setup the rest GUI components
 		this.setupLabelsAndTextFiels();
 		this.setupButtons("Points", "Goal Scored", "Wins", "Generate", "Search");
 		this.setupContainers();
@@ -93,8 +121,8 @@ public class MyTableView extends JFrame implements ActionListener {
 
 			break;
 		}
-		case BY_DATE_CREATED: {
-
+		case BY_DATE_CREATED: { 
+			// TODO: implement
 		}
 		case BY_GOALS: {
 			Collections.sort(this.footballClubs, new Comparator<FootballClub>() {
@@ -102,7 +130,7 @@ public class MyTableView extends JFrame implements ActionListener {
 					return Integer.valueOf(p2.getScoredGoals()).compareTo(p1.getScoredGoals());
 				}
 			});
-			if (this.tableModel != null || this.tableModel != null) {
+			if (this.table != null || this.tableModel != null) {
 				this.updateTable();
 			}
 			break;
@@ -126,49 +154,98 @@ public class MyTableView extends JFrame implements ActionListener {
 	}
 
 	private void generateRandomGame() {
+		// Create Random object
 		Random random = new Random();
 
+		// Get random int to get first football club object from the list of football clubs
 		int footballClub1 = random.nextInt(this.footballClubs.size()) - 1;
+		
+		// Get random int that is going to be first football club's goals
 		int goalsOfFootballClub1 = random.nextInt(6);
 
+		
+		// Get random int to get second football club object from the list of football clubs
 		int footballClub2 = random.nextInt(this.footballClubs.size() - 1) - 1;
+		
+		// Get random int that is going to be second football club's goals
 		int goalsOfFootballClub2 = random.nextInt(6);
 
+		// Counter to break the loop after it processes two football club's data
 		int count = 0;
 
+		// 1 - Check if two football clubs are not identical
+		// 2 - Check if football clubs goal is not less than 0
 		if ((footballClub1 != footballClub2) && (footballClub1 > 0 && footballClub2 > 0)) {
-			System.out.printf("club1 %d: (%d - %d) :%d club2 \n", footballClub1, goalsOfFootballClub1,
-					goalsOfFootballClub2, footballClub2);
+			
+			/** Print for @debug purposes */
+			// System.out.printf("club1 %d: (%d - %d) :%d club2 \n", footballClub1, goalsOfFootballClub1,
+			// 		goalsOfFootballClub2, footballClub2);
 
 			for (FootballClub fClub : footballClubs) { // FIXME: optimise this approach
 				if (fClub != null) {
+					
+					// Check If fClub object matches either fClub1 or fClub2 
 					if ((fClub == footballClubs.get(footballClub1)) || (fClub == footballClubs.get(footballClub2))) {
+						
+						// Add played matches of the fClub 
 						fClub.setPlayedMatches(1);
 
+						// Check If fClub1 and fClub2 scored same amount of goals
 						if (goalsOfFootballClub1 == goalsOfFootballClub2) {
+							
+							// Add draws
 							fClub.setDraws(1);
+							
+							// Add one point
 							fClub.setPoints(1);
-						} else {
-							fClub.setDefeats(1);
 						}
 						count++;
 					}
-
+					
+					// Check if fClub object matches fClub1 
 					if (fClub == footballClubs.get(footballClub1)) {
+						
+						// Add scored goals
 						fClub.setScoredGoals(goalsOfFootballClub1);
+						
+						// Add received goals 
 						fClub.setReceivedGoals(goalsOfFootballClub2);
 
+						// Check if firstFClub scored more than secondFClub
 						if (goalsOfFootballClub1 > goalsOfFootballClub2) {
+							
+							// Add wins
 							fClub.setWins(1);
+							
+							// Add three points
 							fClub.setPoints(3);
+						} else {
+							
+							// Add defeats
+							fClub.setDefeats(1);
 						}
+						
+						// Check if fClub object matches fClub2
 					} else if (fClub == footballClubs.get(footballClub2)) {
+						
+						// Add scored goals
 						fClub.setScoredGoals(goalsOfFootballClub2);
+						
+						// Add received goals 
 						fClub.setReceivedGoals(goalsOfFootballClub1);
 
+						// Check if firstFClub scored less than secondFClub
 						if (goalsOfFootballClub1 < goalsOfFootballClub2) {
+							
+							// Add wins
 							fClub.setWins(1);
+							
+							// Add three points
 							fClub.setPoints(3);
+						} else {
+							
+							// Add defeats
+							fClub.setDefeats(1);
 						}
 					}
 				} else if (count == 2) {
@@ -178,6 +255,9 @@ public class MyTableView extends JFrame implements ActionListener {
 
 			this.updateTable();
 		} else {
+			
+			// if the clubs are the same or the scored goals are 
+			// less than 0 then generate random game again 
 			this.generateRandomGame();
 		}
 	}
@@ -196,12 +276,15 @@ public class MyTableView extends JFrame implements ActionListener {
 	}
 
 	private void updateTable() {
+		
+		// Clear table row's data
 		if (tableModel.getRowCount() > 0) {
 			for (int i = tableModel.getRowCount() - 1; i > -1; i--) {
 				tableModel.removeRow(i);
 			}
 		}
 
+		// Add  table new row's data
 		for (int i = 0; i < this.footballClubs.size(); i++) {
 			String name = this.footballClubs.get(i).getName();
 			int wins = this.footballClubs.get(i).getWins();
@@ -214,9 +297,11 @@ public class MyTableView extends JFrame implements ActionListener {
 
 			Object[] data = { name, wins, draws, defeats, goalScored, goalReceived, totalMatches, points };
 
+			// Add new row with data into the tableModel 
 			tableModel.addRow(data);
 		}
 
+		// Redraw needed GUI components after update
 		table.repaint();
 		table.revalidate();
 		this.repaint();
@@ -224,11 +309,14 @@ public class MyTableView extends JFrame implements ActionListener {
 	}
 
 	private void setupTable() {
+		// Create football clubs table column names 
 		String[] columnNames = { "Club", "Wins", "Draws", "Defeats", "Goals scored", "Goals received", "Played matches",
 				"Points" };
 
+		// TableModel object to contain rows and columns
 		this.tableModel = new DefaultTableModel(columnNames, 0);
 
+		// Create tableModel row data using footballClubs objects data
 		for (int i = 0; i < this.footballClubs.size(); i++) {
 			String name = this.footballClubs.get(i).getName();
 			int wins = this.footballClubs.get(i).getWins();
@@ -241,9 +329,11 @@ public class MyTableView extends JFrame implements ActionListener {
 
 			Object[] data = { name, wins, draws, defeats, goalScored, goalReceived, totalMatches, points };
 
+			// Add row with data into the tableModel
 			tableModel.addRow(data);
 		}
 
+		// Add tableModel into the table
 		table = new JTable(tableModel);
 	}
 
@@ -254,19 +344,24 @@ public class MyTableView extends JFrame implements ActionListener {
 	}
 	
 	private void setupPlayedMatchesTable() {
+		// Create Played games table column names 
 		String[] columnNames = { "Played games", "Date" };
 
+		// TableModel object to contain rows and columns
 		this.playedGamesTableModel = new DefaultTableModel(columnNames, 0);
 		
+		// Create tableModel row data using footballClubs objects data
 		for (int i = 0; i < this.playedGames.size(); i++) {
 			String gameResult = this.playedGames.get(i).getGameResult();
 			String playedDate = this.playedGames.get(i).getGameDate();
 		
 			Object[] data = { gameResult, playedDate};
 		
+			// Add row with data into the tableModel
 			playedGamesTableModel.addRow(data);
 		}
 		
+		// Add tableModel into the table
 		playedGamesTable = new JTable(playedGamesTableModel);
 	}
 	
@@ -288,6 +383,10 @@ public class MyTableView extends JFrame implements ActionListener {
 		this.searchTextField.setColumns(20);
 		this.searchTextField.setText("ex: 10 May 2020");
 		this.searchTextField.setForeground(Color.GRAY);
+		
+		// By default shows default text. But when user click text
+		// field it will clear and wait for user input. When user 
+		// leaves text field, and focus lost, return default text
 		this.searchTextField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -321,6 +420,8 @@ public class MyTableView extends JFrame implements ActionListener {
 		bottomPanel.add(this.generateRandomGameButton);
 		this.mainContainer.add(bottomPanel, BorderLayout.SOUTH);
 	}
+	
+	
 
 	private void setupButtons(String byPointsTitle, String byGoalsTitle, String byWinsTitle, String generateTitle,
 			String searchTitle) {
