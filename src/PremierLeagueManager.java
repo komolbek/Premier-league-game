@@ -50,6 +50,8 @@ public final class PremierLeagueManager implements LeagueManager {
 	/** PUBLIC_METHODS */
 	/** 
 	 * @showUserOptions prints possible user interaction option in the console
+	 * and when user adds particular number (int) method will call particular
+	 * method using @swift_case pattern
 	 */
 	public void showUserOptions() {
 		System.out.println("\n\n###### Please select options below:\n\n"
@@ -74,24 +76,24 @@ public final class PremierLeagueManager implements LeagueManager {
 			case 4: { this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_STATISTICS); break; }
 			case 5: { this.addPlayedGame(); break; }
 			case 6: { 
-				if ((footballClubs.size() > 3) && (playedGames.size() > 3)) {
+				if ((footballClubs.size() > 4) || (playedGames.size() > 3)) {
 					this.fileManager.writeFootballClubsToFile(this.footballClubs);
 					this.footballClubs = this.fileManager.readFootballClubsFromFile();
 					
 					this.fileManager.writePlayedGamesToFile(this.playedGames);
 					this.playedGames = this.fileManager.readPlayedGamesFromFile();
 				} else {
-					System.out.print("\n###### PLEASE add at least 4 CLUBS and 4 played games");
+					System.out.print("\n###### PLEASE add at least 5 CLUBS or 4 played games");
 				}
 				
 				this.showUserOptions();
 				break;
 				}
 			case 7: { 
-				if ((footballClubs.size() > 3) && (playedGames.size() > 3)) {
+				if ((footballClubs.size() > 4) || (playedGames.size() > 3)) {
 					return;
 				} else {
-					System.out.print("\n###### PLEASE add at least 4 CLUBS and 4 played games");
+					System.out.print("\n###### PLEASE add at least 5 CLUBS or 4 played games");
 					this.showUserOptions();
 					break;
 				}
@@ -222,74 +224,105 @@ public final class PremierLeagueManager implements LeagueManager {
 	 * and also ask to select second football club and its score. Then updates 
 	 * Selected clubs statistics and creates the played match with result and date
 	 */ 
-	private void addPlayedGame() { //TODO: add documentation
+	private void addPlayedGame() {
 		if (footballClubs.size() > 1) {
 			System.out.print("\n###### Please select number:\n");
 			
 			this.displayPremierLeagueTable(DisplayPremierLeagueTableType.BY_NAME);
 			
-			int firstFClub, firstFClubScoredGoals, secondFClub, secondFClubScoredGoals, count = 0;
+			FootballClub footballClub_1, footballClub_2;
+			int footballClub_1_Goals, footballClub_2_Goals;
 			String gameDate;
 
 			try {
-				System.out.print("\nSelect FIRST football club: ");
-				firstFClub = Integer.parseInt(input.readLine());
-				System.out.print("Add FIRST football club scored GOALS: ");
-				firstFClubScoredGoals = Integer.parseInt(input.readLine());
-
-				System.out.print("Select SECOND football club: ");
-				secondFClub = Integer.parseInt(input.readLine());
-				System.out.print("Add SECOND football club scored GOALS: ");
-				secondFClubScoredGoals = Integer.parseInt(input.readLine());
 				
-				System.out.print("Select game played date in format 23/12/2019: ");
+				// Get first football club index from user input and get fClub object from list
+				System.out.print("\nSelect FIRST football club: ");
+				footballClub_1 = this.footballClubs.get(Integer.parseInt(input.readLine()) - 1);
+				
+				// Get first football club scored goals from user input
+				System.out.print("Add FIRST football club scored GOALS: ");
+				footballClub_1_Goals = Integer.parseInt(input.readLine());
+
+				// Get second football club index from user input and get fClub object from list
+				System.out.print("Select SECOND football club: ");
+				footballClub_2 = this.footballClubs.get(Integer.parseInt(input.readLine()) - 1);
+				
+				// Get second football club scored goals from user input
+				System.out.print("Add SECOND football club scored GOALS: ");
+				footballClub_2_Goals = Integer.parseInt(input.readLine());
+				
+				// Get date from user input
+				System.out.print("Select game played date EXACTLY in format 23/12/2019: ");
 				gameDate = input.readLine();
 				
-				//Create played game with date and all needed results
+				//Create played game with date and all needed data
 				PlayedGame playedGame = new PlayedGame(gameDate, 
-						footballClubs.get(firstFClub - 1), 
-						firstFClubScoredGoals, 
-						footballClubs.get(secondFClub - 1), 
-						secondFClubScoredGoals);
+						footballClub_1, 
+						footballClub_1_Goals, 
+						footballClub_2, 
+						footballClub_2_Goals);
 				
 				this.playedGames.add(playedGame);
 				
-				for (FootballClub fClub : footballClubs) { // FIXME: optimise this approach
-					if (fClub != null) {
-						if ((fClub == footballClubs.get(firstFClub - 1)) || (fClub == footballClubs.get(secondFClub - 1))) {
-							fClub.setPlayedMatches(1);
-							
-							if (firstFClubScoredGoals == secondFClubScoredGoals) {
-								fClub.setDraws(1);
-								fClub.setPoints(1);
-							} else {
-								fClub.setDefeats(1);
-							}
-							count++;
-						} 
+				if ((footballClub_1 != footballClub_2) && (footballClub_1_Goals >= 0 && footballClub_2_Goals >= 0)) {
+					
+					// Add played matches to the fClubs 
+					footballClub_1.addPlayedMatch();
+					footballClub_2.addPlayedMatch();
+					
+					// Add scored goals
+					footballClub_1.addScoredGoals(footballClub_1_Goals);
+					footballClub_2.addScoredGoals(footballClub_2_Goals);
+					
+					// Add received goals 
+					footballClub_1.addReceivedGoals(footballClub_2_Goals);
+					footballClub_2.addReceivedGoals(footballClub_1_Goals);
+
+					// Check If fClub1 and fClub2 scored same amount of goals
+					if (footballClub_1_Goals == footballClub_2_Goals) {
 						
-						if (fClub == footballClubs.get(firstFClub - 1)) {
-							fClub.setScoredGoals(firstFClubScoredGoals);
-							fClub.setReceivedGoals(secondFClubScoredGoals);
-
-							if (firstFClubScoredGoals > secondFClubScoredGoals) {
-								fClub.setWins(1);
-								fClub.setPoints(3);
-							} 
-						} else if (fClub == footballClubs.get(secondFClub - 1)) {
-							fClub.setScoredGoals(secondFClubScoredGoals);
-							fClub.setReceivedGoals(firstFClubScoredGoals);
-
-							if (firstFClubScoredGoals < secondFClubScoredGoals) {
-								fClub.setWins(1);
-								fClub.setPoints(3);
-							} 
-						}
-					} else if (count == 2) { break; }
+						// Add draws
+						footballClub_1.addDraw();
+						footballClub_2.addDraw();
+						
+						// Add one point
+						footballClub_1.addPoints(1);
+						footballClub_2.addPoints(1);
+						
+					// Check if firstFClub scored more than secondFClub
+					} else if (footballClub_1_Goals > footballClub_2_Goals) {
+						
+						// Add win to fClub_1
+						footballClub_1.addWin();
+						
+						// Add defeat to fClub_2
+						footballClub_2.addDefeat();
+						
+						// Add three points
+						footballClub_1.addPoints(3);
+						
+					// Check if firstFClub scored less than secondFClub
+					} else if (footballClub_1_Goals < footballClub_2_Goals) {
+						
+						// Add win to fClub_2
+						footballClub_2.addWin();
+						
+						// Add defeat to fClub_1
+						footballClub_1.addDefeat();
+						
+						// Add three points
+						footballClub_2.addPoints(3);
+					}
+				} else {
+					
+					// if the clubs are the same
+					System.out.printf("\n### WARNING ### You can not select two same football clubs");
+					this.showUserOptions();
 				}
 				
-				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClubs.get(firstFClub - 1).getName(),
-						firstFClubScoredGoals, secondFClubScoredGoals, footballClubs.get(secondFClub - 1).getName());
+				System.out.printf("\n###### SUCCESS ######: %s %d - %d %s", footballClub_1.getName(),
+						footballClub_1_Goals, footballClub_2_Goals, footballClub_2.getName());
 			} catch (Exception e) {
 				System.out.printf("### ERROR ### Please enter only Numbers. %s\n", e.getLocalizedMessage());
 			}

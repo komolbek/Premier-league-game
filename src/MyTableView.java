@@ -162,107 +162,70 @@ public class MyTableView extends JFrame implements ActionListener {
 		Random random = new Random();
 
 		// Get random int to get first football club object from the list of football clubs
-		int footballClub_1 = random.nextInt(this.footballClubs.size());
+		FootballClub footballClub_1 = this.footballClubs.get(random.nextInt(this.footballClubs.size()));
 		
 		// Get random int that is going to be first football club's goals
 		int footballClub_1_Goals = random.nextInt(6);
 
 		
 		// Get random int to get second football club object from the list of football clubs
-		int footballClub_2 = random.nextInt(this.footballClubs.size());
+		FootballClub footballClub_2 = this.footballClubs.get(random.nextInt(this.footballClubs.size()));
 		
 		// Get random int that is going to be second football club's goals
 		int footballClub_2_Goals = random.nextInt(6);
-
-		// Counter to break the loop after it processes two football club's data
-		int count = 0;
 
 		// 1 - Check if two football clubs are not identical
 		// 2 - Check if football clubs goal is not less than 0
 		if ((footballClub_1 != footballClub_2) && (footballClub_1_Goals >= 0 && footballClub_2_Goals >= 0)) {
 			
-			this.generateRandomGameDate(
-					this.footballClubs.get(footballClub_1), 
-					footballClub_1_Goals, 
-					this.footballClubs.get(footballClub_2), 
-					footballClub_2_Goals
-					);
+			this.generateRandomGameDate(footballClub_1, footballClub_1_Goals, footballClub_2, footballClub_2_Goals);
 			
-			/** Print for @debug purposes */
-			// System.out.printf("club1 %d: (%d - %d) :%d club2 \n", footballClub1, goalsOfFootballClub1,
-			// 		goalsOfFootballClub2, footballClub2);
+			// Add played matches to the fClubs 
+			footballClub_1.addPlayedMatch();
+			footballClub_2.addPlayedMatch();
+			
+			// Add scored goals
+			footballClub_1.addScoredGoals(footballClub_1_Goals);
+			footballClub_2.addScoredGoals(footballClub_2_Goals);
+			
+			// Add received goals 
+			footballClub_1.addReceivedGoals(footballClub_2_Goals);
+			footballClub_2.addReceivedGoals(footballClub_1_Goals);
 
-			for (FootballClub fClub : footballClubs) { // FIXME: optimise this approach
-				if (fClub != null) {
-					
-					// Check If fClub object matches either fClub1 or fClub2 
-					if ((fClub == footballClubs.get(footballClub_1)) || (fClub == footballClubs.get(footballClub_2))) {
-						
-						// Add played matches of the fClub 
-						fClub.setPlayedMatches(1);
-
-						// Check If fClub1 and fClub2 scored same amount of goals
-						if (footballClub_1_Goals == footballClub_2_Goals) {
-							
-							// Add draws
-							fClub.setDraws(1);
-							
-							// Add one point
-							fClub.setPoints(1);
-						}
-						count++;
-					}
-					
-					// Check if fClub object matches fClub1 
-					if (fClub == footballClubs.get(footballClub_1)) {
-						
-						// Add scored goals
-						fClub.setScoredGoals(footballClub_1_Goals);
-						
-						// Add received goals 
-						fClub.setReceivedGoals(footballClub_2_Goals);
-
-						// Check if firstFClub scored more than secondFClub
-						if (footballClub_1_Goals > footballClub_2_Goals) {
-							
-							// Add wins
-							fClub.setWins(1);
-							
-							// Add three points
-							fClub.setPoints(3);
-						} else if (footballClub_1_Goals < footballClub_2_Goals) {
-							
-							// Add defeats
-							fClub.setDefeats(1);
-						}
-						
-						// Check if fClub object matches fClub2
-					} else if (fClub == footballClubs.get(footballClub_2)) {
-						
-						// Add scored goals
-						fClub.setScoredGoals(footballClub_2_Goals);
-						
-						// Add received goals 
-						fClub.setReceivedGoals(footballClub_1_Goals);
-
-						// Check if firstFClub scored less than secondFClub
-						if (footballClub_1_Goals < footballClub_2_Goals) {
-							
-							// Add wins
-							fClub.setWins(1);
-							
-							// Add three points
-							fClub.setPoints(3);
-						} else if (footballClub_1_Goals > footballClub_2_Goals) {
-							
-							// Add defeats
-							fClub.setDefeats(1);
-						}
-						
-					}
-				} else if (count == 2) {
-					break;
-				}
+			// Check If fClub1 and fClub2 scored same amount of goals
+			if (footballClub_1_Goals == footballClub_2_Goals) {
+				
+				// Add draws
+				footballClub_1.addDraw();
+				footballClub_2.addDraw();
+				
+				// Add one point
+				footballClub_1.addPoints(1);
+				footballClub_2.addPoints(1);
+				
+			// Check if firstFClub scored more than secondFClub
+			} else if (footballClub_1_Goals > footballClub_2_Goals) {
+				
+				// Add win to fClub_1
+				footballClub_1.addWin();
+				
+				// Add defeat to fClub_2
+				footballClub_2.addDefeat();
+				
+				// Add three points
+				footballClub_1.addPoints(3);
+				
+			// Check if firstFClub scored less than secondFClub
+			} else if (footballClub_1_Goals < footballClub_2_Goals) {
+				
+				// Add win to fClub_2
+				footballClub_2.addWin();
+				
+				// Add defeat to fClub_1
+				footballClub_1.addDefeat();
+				
+				// Add three points
+				footballClub_2.addPoints(3);
 			}
 
 			this.updateTable();
@@ -276,11 +239,11 @@ public class MyTableView extends JFrame implements ActionListener {
 	
 	private void generateRandomGameDate(FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
 		Random random = new Random();
-		int minDay = (int) LocalDate.of(2000, 1, 1).toEpochDay();
-		int maxDay = (int) LocalDate.of(2020, 1, 1).toEpochDay();
-		long randomDay = minDay + random.nextInt(maxDay - minDay);
+		int minDate = (int) LocalDate.of(2000, 1, 1).toEpochDay();
+		int maxDate = (int) LocalDate.of(2020, 1, 1).toEpochDay();
+		long randomDateLong = minDate + random.nextInt(maxDate - minDate);
 
-		LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
+		LocalDate randomDate = LocalDate.ofEpochDay(randomDateLong);
 		
 		PlayedGame playedGame = new PlayedGame(randomDate, fClub1, fClub1Goals, fClub2, fClub2Goals);
 		this.playedGames.add(playedGame);
