@@ -19,13 +19,12 @@ public class PlayedGame implements Serializable {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
 		String formattedString = playedAt.format(formatter);
 		
-		this.setGameDate(formattedString);
+		this.setGameDate_Format_2(formattedString);
 		this.setGameResult(fClub1, fClub1Goals, fClub2, fClub2Goals);
 	}
 	
-	public PlayedGame(String date, String playedAt, FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
-		this.setGameDate(date);
-		this.setGameDate(playedAt);
+	public PlayedGame(String playedAt, FootballClub fClub1, int fClub1Goals, FootballClub fClub2, int fClub2Goals) {
+		this.setGameDate_Format_1(playedAt);
 		this.setGameResult(fClub1, fClub1Goals, fClub2, fClub2Goals);
 	}
 	/**
@@ -36,7 +35,18 @@ public class PlayedGame implements Serializable {
 		return new SimpleDateFormat("dd LLLL yyyy").format(this.gameDate);
 	}
 	
-	private void setGameDate(String gameDate) {
+	private void setGameDate_Format_1(String gameDate) {
+		Date date;
+		try {
+			// Parse string to data format
+			date = (Date) new SimpleDateFormat("dd/mm/yyyy").parse(gameDate);
+			this.gameDate = date;
+		} catch (ParseException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+	}
+	
+	private void setGameDate_Format_2(String gameDate) {
 		Date date;
 		try {
 			// Parse string to data format
