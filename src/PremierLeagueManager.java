@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public final class PremierLeagueManager implements LeagueManager {
 	
@@ -206,6 +208,13 @@ public final class PremierLeagueManager implements LeagueManager {
 				return;
 			}
 			case BY_STATISTICS: {
+				
+				// Sorts football clubs by points in DESC order 
+				Collections.sort(this.footballClubs, new Comparator<FootballClub>() {
+					public int compare(FootballClub p1, FootballClub p2) {
+						return Integer.valueOf(p2.getPoints()).compareTo(p1.getPoints());
+					}
+				});
 				for (int i = 0; i < this.footballClubs.size(); i++) {
 					if (this.footballClubs.get(i) != null) {
 						System.out.printf("%s\n", this.footballClubs.get(i).toString());
